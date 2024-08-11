@@ -67,7 +67,7 @@ with tabs[0]:
     # Lottie Olympic-themed animation
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=300)
+    st_lottie(lottie_json, height=400)
     st.write("Analyze the sentiment of Olympic-related content with our advanced tool.")
 
 with tabs[1]:
@@ -181,7 +181,7 @@ with tabs[2]:
         with col1:
             try:
                 image = Image.open(member["image"])
-                st.image(image, width=200)
+                st.image(image, width=300)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=200)
         
