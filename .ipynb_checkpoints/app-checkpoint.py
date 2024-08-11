@@ -63,6 +63,7 @@ st.markdown(f"""
 # Content for each tab
 with tabs[0]:
     st.title("Welcome to the 2024 Paris Olympics Sentiment Analyzer")
+    
     # Lottie Olympic-themed animation
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
@@ -72,6 +73,11 @@ with tabs[0]:
 with tabs[1]:
     st.title("Olympic Sentiment Analyzer")
     
+    # Load and display team Lottie animation
+    lottie_url = "https://lottie.host/83213d4d-0fde-4804-86d7-03b17919cf3b/nYDHta6PFS.json"  
+    lottie_json = load_lottieurl(lottie_url)
+    
+    st_lottie(lottie_json, height=300)
     # Initialize sentiment to a default value
     sentiment = "neutral"
     
@@ -119,7 +125,11 @@ with tabs[1]:
 
 with tabs[2]:
     st.title("The Data Sentinels")
-
+    # Load and display team Lottie animation
+    lottie_url = "https://lottie.host/18039274-4e01-4558-845e-a1d1d3b950eb/cKT9Btma01.json"  
+    lottie_json = load_lottieurl(lottie_url)
+    
+    st_lottie(lottie_json, height=300)
     # Team members
     team_members = [
         {
@@ -192,11 +202,11 @@ with tabs[2]:
 
 with tabs[3]:
     st.title("About the Olympic Sentiment Analyzer")
-    # Load and display the Olympic flame Lottie animation
+    # Load and display torch bearer Lottie animation
     lottie_url = "https://lottie.host/93047e01-af1c-425a-89f5-c4d49abc3aaa/LVMzN5PPXM.json"  
     lottie_json = load_lottieurl(lottie_url)
     
-    st_lottie(lottie_json, height=300, key="background-animation")
+    st_lottie(lottie_json, height=300)
     st.write("""
     The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Olympic Games. 
     Our application uses advanced natural language processing and machine learning techniques to process large volumes of 
