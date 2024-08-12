@@ -59,7 +59,7 @@ st.markdown(f"""
     display: flex;
     justify-content: space-evenly;
 }}
-
+    
 .stTabs [data-baseweb="tab"] {{
     width: 150px;
     height: 150px;
@@ -67,9 +67,9 @@ st.markdown(f"""
     border: 5px solid transparent;
     line-height: 60px;
     text-align: center;
-    color: white;
+    color: auto;
     font-weight: bold;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease; 
 }}
 
 .stTabs [data-baseweb="tab"]:nth-child(1) {{
@@ -240,26 +240,80 @@ with tabs[2]:
                 st.image(image, width=150)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=200)
-        
+
         with col2:
             st.markdown(f"""
+            <style>
+            .team-member {{
+                background-color: #f0f0f0; /* Light gray background for the bubble */
+                padding: 20px;
+                border-radius: 15px; /* Rounded corners for the bubble effect */
+                border: 1px solid #ddd; /* Slight border to define the bubble */
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+                margin-bottom: 20px; /* Space below each member bubble */
+            }}
+            .member-name {{
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: black;
+            }}
+            .member-title {{
+                font-size: 16px;
+                color: blue;
+                margin-bottom: 10px;
+                font-style: italic; /* Italicize the title */
+            }}
+            .member-bio {{
+                margin-bottom: 10px;
+                color: black;
+            }}
+            .member-contact a {{
+                margin-right: 10px;
+                color: #007bff; /* Color for the icons */
+                text-decoration: none;
+            }}
+            .member-contact a:hover {{
+                color: #0056b3; /* Darker color on hover */
+            }}
+            </style>
             <div class="team-member">
                 <div class="member-name">{member['name']}</div>
                 <div class="member-title">{member['title']}</div>
                 <div class="member-bio">{member['bio']}</div>
                 <div class="member-contact">
-                    <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
+                    <a href="https://github.com/{member['github']}" target="_blank">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="mailto:{member['email']}" class="social-icon">
+                    <a href="mailto:{member['email']}">
                         <i class="far fa-envelope"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
+                    <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
                 </div>
             </div>
             """, unsafe_allow_html=True)
+        
+        # with col2:
+        #     st.markdown(f"""
+        #     <div class="team-member">
+        #         <div class="member-name">{member['name']}</div>
+        #         <div class="member-title">{member['title']}</div>
+        #         <div class="member-bio">{member['bio']}</div>
+        #         <div class="member-contact">
+        #             <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
+        #                 <i class="fab fa-github"></i>
+        #             </a>
+        #             <a href="mailto:{member['email']}" class="social-icon">
+        #                 <i class="far fa-envelope"></i>
+        #             </a>
+        #             <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
+        #                 <i class="fab fa-linkedin"></i>
+        #             </a>
+        #         </div>
+        #     </div>
+        #     """, unsafe_allow_html=True)
 
 
 
