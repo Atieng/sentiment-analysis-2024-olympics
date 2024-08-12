@@ -6,55 +6,90 @@ from PIL import Image
 import pandas as pd
 
 
-# Function to load Lottie animations
+# Load Lottie animations
 def load_lottieurl(url: str):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
 
-# Function to create Olympic torch
+# Create Olympic torch based on sentiment
 def create_torch(sentiment):
-    colors = {"positive": "rgb(255, 165, 0)", "neutral": "rgb(173, 216, 230)", "negative": "rgb(0, 0, 255)"}
+    # Define colors based on sentiment
+    colors = {
+        "positive": "rgb(0, 0, 255)",   # Blue for positive
+        "neutral": "rgb(255, 255, 0)",  # Yellow for neutral
+        "negative": "rgb(255, 0, 0)"    # Red for negative
+    }
+
+    # Create a triangular shape resembling an Olympic torch
     fig = go.Figure(data=[go.Scatter(
-        x=[0, 1, 2],
-        y=[0, 1, 0],
-        fill="toself",
-        fillcolor=colors[sentiment],
-        line_color="rgba(0,0,0,0)",
+        x=[0, 1, 2],                    
+        y=[0, 1.5, 0],                  
+        fill="toself",                  
+        fillcolor=colors[sentiment],    
+        line=dict(color="rgba(0,0,0,0)")
     )])
+
+    # Update layout to hide axes and frame the torch
     fig.update_layout(
-        showlegend=False,
+        showlegend=False,               
         xaxis=dict(showgrid=False, zeroline=False, visible=False),
         yaxis=dict(showgrid=False, zeroline=False, visible=False),
         margin=dict(l=0, r=0, t=0, b=0),
-        height=300,
+        height=300,                    
+        width=200                       
     )
+    
     return fig
 
 # Set page config
 st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
 
 # Olympic ring colors
-ring_colors = ["#0081C8", "#FCB131", "#00A651", "#FF0000"]
+ring_colors = ["blue", "yellow", "green", "red"]
 
 # Create tabs
 tabs = st.tabs(["🏠 Home", "📊 Sentiment Analyzer", "👥 The Data Sentinels", "ℹ️ Info"])
 
-# Apply Olympic ring colors to tabs
+# Apply Olympic ring colors to tabs and style them as rings
 st.markdown(f"""
 <style>
+.stTabs {{
+    display: flex;
+    justify-content: space-evenly;
+}}
+
+.stTabs [data-baseweb="tab"] {{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    line-height: 60px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}}
+
 .stTabs [data-baseweb="tab"]:nth-child(1) {{
-    background-color: {ring_colors[0]};
+    border-color: {ring_colors[0]};
 }}
+
 .stTabs [data-baseweb="tab"]:nth-child(2) {{
-    background-color: {ring_colors[1]};
+    border-color: {ring_colors[1]};
 }}
+
 .stTabs [data-baseweb="tab"]:nth-child(3) {{
-    background-color: {ring_colors[2]};
+    border-color: {ring_colors[2]};
 }}
+
 .stTabs [data-baseweb="tab"]:nth-child(4) {{
-    background-color: {ring_colors[3]};
+    border-color: {ring_colors[3]};
+}}
+
+.stTabs [data-baseweb="tab"]:hover {{
+    transform: scale(1.1);
 }}
 
 </style>
@@ -130,6 +165,22 @@ with tabs[2]:
     lottie_json = load_lottieurl(lottie_url)
     
     st_lottie(lottie_json, height=300)
+
+    st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .social-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+        .social-icon:hover {
+            opacity: 0.7;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Team members
     team_members = [
         {
@@ -138,7 +189,8 @@ with tabs[2]:
             "bio": "Ivy is an experienced data scientist with a focus on natural language processing and sentiment analysis. She is our data pipeline expert and brings valuable insights to the team.",
             "image": "the_team/ivy.jpg",
             "github": "Atieng",
-            "email": "atiengivylisa@gmail.com"
+            "email": "atiengivylisa@gmail.com",
+            "linkedin": ""
         },
         {
             "name": "Titus Kaluma",
@@ -146,7 +198,8 @@ with tabs[2]:
             "bio": "Titus coordinates the team's efforts and ensures that we meet our project milestones. His background in both data science and project management keeps us on track and aligned with our goals.",
             "image": "the_team/titus.jpg",
             "github": "Kaluma-67",
-            "email": "mwirigikaluma@gmail.com"
+            "email": "mwirigikaluma@gmail.com",
+            "linkedin": ""
         },
         {
             "name": "Elizabeth Masai",
@@ -154,7 +207,8 @@ with tabs[2]:
             "bio": "Elizabeth excels at creating insightful and interactive data visualizations. Her skills are essential for presenting our findings in a clear and impactful manner.",
             "image": "the_team/elizabeth.jpg",
             "github": "ElizabethMasai",
-            "email": "elizabethchemtaim@gmail.com"
+            "email": "elizabethchemtaim@gmail.com",
+            "linkedin": ""
         },
         {
             "name": "Sheila Mulwa",
@@ -162,15 +216,17 @@ with tabs[2]:
             "bio": "Sheila brings a unique blend of analytical thinking and creative flair to our team by creating compelling visual narratives and engaging presentations that make our findings accessible to both technical and non-technical audiences.",
             "image": "the_team/sheila.jpg",
             "github": "Sheila-Mulwa",
-            "email": "sheila.n.mulwa@gmail.com"
+            "email": "sheila.n.mulwa@gmail.com",
+            "linkedin": ""
         },
         {
             "name": "Evaclaire Munyika",
             "title": "Deployment Specialist",
-            "bio": "Claire is our go-to expert for turning our sentiment analysis models into robust, scalable applications. Her knowledge of serverless computing allows us to deploy our sentiment analysis tools in a cost-effective, highly available manner.",
+            "bio": "Claire is our go-to expert for turning our sentiment analysis models into robust, scalable applications. Her knowledge of serverless computing allows us to deploy our sentiment analysis tools in a cost-effective and highly available manner.",
             "image": "the_team/claire.jpg",
             "github": "Eva-Claire",
-            "email": "evamunyika@gmail.com"
+            "email": "evamunyika@gmail.com",
+            "linkedin": "www.linkedin.com/in/evaclaire-munyika-991295114"
         }
     ]
 
@@ -181,7 +237,7 @@ with tabs[2]:
         with col1:
             try:
                 image = Image.open(member["image"])
-                st.image(image, width=300)
+                st.image(image, width=150)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=200)
         
@@ -192,8 +248,15 @@ with tabs[2]:
                 <div class="member-title">{member['title']}</div>
                 <div class="member-bio">{member['bio']}</div>
                 <div class="member-contact">
-                    <a href="https://github.com/{member['github']}" target="_blank" class="octocat-icon">GitHub</a>
-                    <a href="mailto:{member['email']}" class="email-icon">Email</a>
+                    <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="mailto:{member['email']}" class="social-icon">
+                        <i class="far fa-envelope"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -223,4 +286,4 @@ with tabs[3]:
 
 # Footer
 st.markdown("---")
-st.markdown("© 2024 Olympic Sentiment Analyzer Team. All rights reserved.")
+st.markdown("© 2024 Olympic Sentiment Analyzer. All rights reserved.")
