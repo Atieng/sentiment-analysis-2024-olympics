@@ -13,44 +13,48 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-# Create Olympic torch based on sentiment
-def create_torch(sentiment):
-    # Define colors based on sentiment
-    colors = {
-        "positive": "rgb(0, 0, 255)",   # Blue for positive
-        "neutral": "rgb(255, 255, 0)",  # Yellow for neutral
-        "negative": "rgb(255, 0, 0)"    # Red for negative
+def display_sentiment_emoticon(sentiment):
+    emoticons = {
+        "positive": "😄",  # Smiling face for positive
+        "neutral": "😐",   # Neutral face for neutral
+        "negative": "😞"   # Sad face for negative
     }
-
-    # Create a triangular shape resembling an Olympic torch
-    fig = go.Figure(data=[go.Scatter(
-        x=[0, 1, 2],                    
-        y=[0, 1.5, 0],                  
-        fill="toself",                  
-        fillcolor=colors[sentiment],    
-        line=dict(color="rgba(0,0,0,0)")
-    )])
-
-    # Update layout to hide axes and frame the torch
-    fig.update_layout(
-        showlegend=False,               
-        xaxis=dict(showgrid=False, zeroline=False, visible=False),
-        yaxis=dict(showgrid=False, zeroline=False, visible=False),
-        margin=dict(l=0, r=0, t=0, b=0),
-        height=300,                    
-        width=200                       
-    )
     
-    return fig
+    colors = {
+        "positive": "blue",
+        "neutral": "yellow",
+        "negative": "red"
+    }
+    
+    emoticon = emoticons.get(sentiment, "❓")  # Retrieves emoticon based on the sentiment, returns question mark if sentiment is unknown
+    color = colors.get(sentiment, "black") # Retrieves a color associated with the sentiment, if sentiment not found default color is "black"
+    
+    st.markdown(f"""
+    <div style="display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 200px;">
+        <span style="font-size: 100px; color: {color};">{emoticon}</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-# Set page config
+    st.markdown(f"""
+    <div style="text-align: center; 
+    font-size: 24px; 
+    color: {color};">
+        Sentiment: {sentiment.capitalize()}
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# Set page configuration
 st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
 
 # Olympic ring colors
 ring_colors = ["blue", "yellow", "green", "red"]
 
 # Create tabs
-tabs = st.tabs(["🏠 Home", "📊 Sentiment Analyzer", "👥 The Data Sentinels", "ℹ️ Info"])
+tabs = st.tabs(["🏠 Home", "📊 Sentiment Analyzer", "👥 The Team", "ℹ️ Info"])
 
 # Apply Olympic ring colors to tabs and style them as rings
 st.markdown(f"""
@@ -59,7 +63,7 @@ st.markdown(f"""
     display: flex;
     justify-content: space-evenly;
 }}
-
+    
 .stTabs [data-baseweb="tab"] {{
     width: 150px;
     height: 150px;
@@ -67,9 +71,9 @@ st.markdown(f"""
     border: 5px solid transparent;
     line-height: 60px;
     text-align: center;
-    color: white;
+    color: auto;
     font-weight: bold;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease; 
 }}
 
 .stTabs [data-baseweb="tab"]:nth-child(1) {{
@@ -111,11 +115,10 @@ with tabs[1]:
     # Load and display team Lottie animation
     lottie_url = "https://lottie.host/83213d4d-0fde-4804-86d7-03b17919cf3b/nYDHta6PFS.json"  
     lottie_json = load_lottieurl(lottie_url)
-    
     st_lottie(lottie_json, height=300)
+    
     # Initialize sentiment to a default value
     sentiment = "neutral"
-    
     # File upload
     uploaded_file = st.file_uploader("Upload your data (CSV or TXT)", type=["csv", "txt"])
     
@@ -142,21 +145,22 @@ with tabs[1]:
         if uploaded_file.type == "text/csv":
             df = pd.read_csv(uploaded_file)
             df['sentiment'] = df['text'].apply(lambda x: dummy_sentiment_analysis(x))
-            st.write(df)
-            # Set sentiment to the predominant sentiment in the DataFrame, if needed
+            df['emoticon'] = df['sentiment'].apply(get_sentiment_emoticon)  # Add emoticon column 
+            st.write(df) # Display the DataFrame
+            
+            # Set sentiment to the predominant sentiment in the DataFrame if needed
             sentiment = df['sentiment'].mode()[0] if not df['sentiment'].empty else "neutral"
         else:
             content = uploaded_file.getvalue().decode("utf-8")
             sentiment = dummy_sentiment_analysis(content)
-            st.write(f"Sentiment: {sentiment}")
     else:
-        user_input = st.text_area("Or enter text to analyze:")
+        user_input = st.text_area("..or enter text to analyze:")
         if st.button("Analyze Sentiment"):
             sentiment = dummy_sentiment_analysis(user_input) if user_input else "neutral"
-            st.write(f"Sentiment: {sentiment}")
+            
+    # Display sentiment emoticon
+    display_sentiment_emoticon(sentiment)
 
-    # Display Olympic torch
-    st.plotly_chart(create_torch(sentiment), use_container_width=True)
 
 with tabs[2]:
     st.title("The Data Sentinels")
@@ -190,7 +194,7 @@ with tabs[2]:
             "image": "the_team/ivy.jpg",
             "github": "Atieng",
             "email": "atiengivylisa@gmail.com",
-            "linkedin": ""
+            "linkedin": "ivy-atieng/"
         },
         {
             "name": "Titus Kaluma",
@@ -199,7 +203,7 @@ with tabs[2]:
             "image": "the_team/titus.jpg",
             "github": "Kaluma-67",
             "email": "mwirigikaluma@gmail.com",
-            "linkedin": ""
+            "linkedin": "titus-mwirigi-62952972/"
         },
         {
             "name": "Elizabeth Masai",
@@ -208,7 +212,7 @@ with tabs[2]:
             "image": "the_team/elizabeth.jpg",
             "github": "ElizabethMasai",
             "email": "elizabethchemtaim@gmail.com",
-            "linkedin": ""
+            "linkedin": "elizabeth-masai-6aab8118a"
         },
         {
             "name": "Sheila Mulwa",
@@ -217,7 +221,7 @@ with tabs[2]:
             "image": "the_team/sheila.jpg",
             "github": "Sheila-Mulwa",
             "email": "sheila.n.mulwa@gmail.com",
-            "linkedin": ""
+            "linkedin": "sheila-mulwa?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
         },
         {
             "name": "Evaclaire Munyika",
@@ -226,7 +230,7 @@ with tabs[2]:
             "image": "the_team/claire.jpg",
             "github": "Eva-Claire",
             "email": "evamunyika@gmail.com",
-            "linkedin": "www.linkedin.com/in/evaclaire-munyika-991295114"
+            "linkedin": "evaclaire-munyika-991295114"
         }
     ]
 
@@ -240,26 +244,80 @@ with tabs[2]:
                 st.image(image, width=150)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=200)
-        
+
         with col2:
             st.markdown(f"""
+            <style>
+            .team-member {{
+                background-color: #f0f0f0; /* Light gray background for the bubble */
+                padding: 20px;
+                border-radius: 15px; /* Rounded corners for the bubble effect */
+                border: 1px solid #ddd; /* Slight border to define the bubble */
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+                margin-bottom: 20px; /* Space below each member bubble */
+            }}
+            .member-name {{
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 5px;
+                color: black;
+            }}
+            .member-title {{
+                font-size: 16px;
+                color: blue;
+                margin-bottom: 10px;
+                font-style: italic; /* Italicize the title */
+            }}
+            .member-bio {{
+                margin-bottom: 10px;
+                color: black;
+            }}
+            .member-contact a {{
+                margin-right: 10px;
+                color: #007bff; /* Color for the icons */
+                text-decoration: none;
+            }}
+            .member-contact a:hover {{
+                color: #0056b3; /* Darker color on hover */
+            }}
+            </style>
             <div class="team-member">
                 <div class="member-name">{member['name']}</div>
                 <div class="member-title">{member['title']}</div>
                 <div class="member-bio">{member['bio']}</div>
                 <div class="member-contact">
-                    <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
+                    <a href="https://github.com/{member['github']}" target="_blank">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="mailto:{member['email']}" class="social-icon">
+                    <a href="mailto:{member['email']}">
                         <i class="far fa-envelope"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
+                    <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank">
                         <i class="fab fa-linkedin"></i>
                     </a>
                 </div>
             </div>
             """, unsafe_allow_html=True)
+        
+        # with col2:
+        #     st.markdown(f"""
+        #     <div class="team-member">
+        #         <div class="member-name">{member['name']}</div>
+        #         <div class="member-title">{member['title']}</div>
+        #         <div class="member-bio">{member['bio']}</div>
+        #         <div class="member-contact">
+        #             <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
+        #                 <i class="fab fa-github"></i>
+        #             </a>
+        #             <a href="mailto:{member['email']}" class="social-icon">
+        #                 <i class="far fa-envelope"></i>
+        #             </a>
+        #             <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
+        #                 <i class="fab fa-linkedin"></i>
+        #             </a>
+        #         </div>
+        #     </div>
+        #     """, unsafe_allow_html=True)
 
 
 
