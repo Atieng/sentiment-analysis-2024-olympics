@@ -4,7 +4,30 @@ from streamlit_lottie import st_lottie
 import requests
 from PIL import Image
 import pandas as pd
+import base64
 
+# Set page configuration
+st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
+
+def add_bg_image(image_file):
+    with open(image_file, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode()
+    st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url(data:image/{"png" if image_file.name.endswith("png") else "jpg"};base64,{encoded_string});
+        background-size: 100%; /* Adjust the percentage to zoom out or in */
+        background-position: top;
+        background-repeat: no-repeat;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
+# Call the function with your image file
+add_bg_image("images/background.jpg")
 
 # Load Lottie animations
 def load_lottieurl(url: str):
@@ -15,10 +38,10 @@ def load_lottieurl(url: str):
 
 def display_sentiment_emoticon(sentiment):
     emoticons = {
-        "positive": "😄",  # Smiling face for positive
-        "neutral": "😐",   # Neutral face for neutral
-        "negative": "😞"   # Sad face for negative
-    }
+        "positive": "😄",  # Smiley face for positive sentiments
+        "neutral": "😐",   # Neutral face for neutral sentiments
+        "negative": "😞"   # Sad face for negative sentiments
+    } 
     
     colors = {
         "positive": "blue",
@@ -28,7 +51,11 @@ def display_sentiment_emoticon(sentiment):
     
     emoticon = emoticons.get(sentiment, "❓")  # Retrieves emoticon based on the sentiment, returns question mark if sentiment is unknown
     color = colors.get(sentiment, "black") # Retrieves a color associated with the sentiment, if sentiment not found default color is "black"
+
     
+    # Display the sentiment emoticon and sentiment text centered on the screen
+    # The emoticon is displayed with a large font size and color based on the sentiment
+    # The sentiment text is shown below the emoticon, centered and styled with the corresponding color based on sentiment
     st.markdown(f"""
     <div style="display: flex; 
     justify-content: center; 
@@ -47,14 +74,12 @@ def display_sentiment_emoticon(sentiment):
     """, unsafe_allow_html=True)
 
 
-# Set page configuration
-st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
 
 # Olympic ring colors
-ring_colors = ["blue", "yellow", "green", "red"]
+ring_colors = ["blue", "yellow", "gray", "green", "red"]
 
 # Create tabs
-tabs = st.tabs(["🏠 Home", "📊 Sentiment Analyzer", "👥 The Team", "ℹ️ Info"])
+tabs = st.tabs(["🏠 Home", "📊 Analyzer", "👥 The Team", "ℹ️ Info", "💬 Feedback"])
 
 # Apply Olympic ring colors to tabs and style them as rings
 st.markdown(f"""
@@ -65,8 +90,8 @@ st.markdown(f"""
 }}
     
 .stTabs [data-baseweb="tab"] {{
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     border: 5px solid transparent;
     line-height: 60px;
@@ -92,6 +117,10 @@ st.markdown(f"""
     border-color: {ring_colors[3]};
 }}
 
+.stTabs [data-baseweb="tab"]:nth-child(5) {{
+    border-color: {ring_colors[4]};
+}}
+
 .stTabs [data-baseweb="tab"]:hover {{
     transform: scale(1.1);
 }}
@@ -99,23 +128,24 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# Content for each tab
+# Home tab
 with tabs[0]:
     st.title("Welcome to the 2024 Paris Olympics Sentiment Analyzer")
     
     # Lottie Olympic-themed animation
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=400)
-    st.write("Analyze the sentiment of Olympic-related content with our advanced tool.")
+    st_lottie(lottie_json, height=200)
+    st.write("Analyze sentiment of the 2024 Paris Olympics with our advanced tool.")
 
+# Sentiment analyzer tab
 with tabs[1]:
     st.title("Olympic Sentiment Analyzer")
     
     # Load and display team Lottie animation
     lottie_url = "https://lottie.host/83213d4d-0fde-4804-86d7-03b17919cf3b/nYDHta6PFS.json"  
     lottie_json = load_lottieurl(lottie_url)
-    st_lottie(lottie_json, height=300)
+    st_lottie(lottie_json, height=200)
     
     # Initialize sentiment to a default value
     sentiment = "neutral"
@@ -144,12 +174,12 @@ with tabs[1]:
     if uploaded_file is not None:
         if uploaded_file.type == "text/csv":
             df = pd.read_csv(uploaded_file)
-            df['sentiment'] = df['text'].apply(lambda x: dummy_sentiment_analysis(x))
-            df['emoticon'] = df['sentiment'].apply(get_sentiment_emoticon)  # Add emoticon column 
+            df["sentiment"] = df["text"].apply(lambda x: dummy_sentiment_analysis(x))
+            df["emoticon"] = df["sentiment"].apply(get_sentiment_emoticon)  # Add emoticon column 
             st.write(df) # Display the DataFrame
             
-            # Set sentiment to the predominant sentiment in the DataFrame if needed
-            sentiment = df['sentiment'].mode()[0] if not df['sentiment'].empty else "neutral"
+            # Set sentiment to the predominant sentiment in the DataFrame when needed
+            sentiment = df["sentiment"].mode()[0] if not df["sentiment"].empty else "neutral"
         else:
             content = uploaded_file.getvalue().decode("utf-8")
             sentiment = dummy_sentiment_analysis(content)
@@ -161,15 +191,16 @@ with tabs[1]:
     # Display sentiment emoticon
     display_sentiment_emoticon(sentiment)
 
-
+# Team tab
 with tabs[2]:
     st.title("The Data Sentinels")
-    # Load and display team Lottie animation
+    
+    # Load and display team animation
     lottie_url = "https://lottie.host/18039274-4e01-4558-845e-a1d1d3b950eb/cKT9Btma01.json"  
     lottie_json = load_lottieurl(lottie_url)
-    
-    st_lottie(lottie_json, height=300)
+    st_lottie(lottie_json, height=200)
 
+    # Add link to Font Awesome CSS file to retrieve social media icons
     st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -185,7 +216,7 @@ with tabs[2]:
     </style>
     """, unsafe_allow_html=True)
     
-    # Team members
+    # Team members info
     team_members = [
         {
             "name": "Ivy Atieng",
@@ -234,7 +265,7 @@ with tabs[2]:
         }
     ]
 
-    # Display team members with Olympic theme
+    # Loop through each team member and display info and image, if image not found, display placeholder image
     for member in team_members:
         col1, col2 = st.columns([1, 3])
         
@@ -244,17 +275,25 @@ with tabs[2]:
                 st.image(image, width=150)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=200)
+                
 
+        # Define CSS styles for the team member section:
+        # - The "team-member" class creates a light gray bubble with padding, rounded corners, a slight border and a shadow for depth
+        # - The "member-name" class styles the team member's name with bold font, a larger font size and black color
+        # - The "member-title" class styles the team member's title with blue color, italic font style and a smaller font size than member name
+        # - The "member-bio" class adds space below the bio text and styles it with black color
+        # - The "member-contact" class adds styling for the contact icons including color, margin and hover effects
+        # Display the team member's name, title, bio and contact links within a styled div element
         with col2:
             st.markdown(f"""
             <style>
             .team-member {{
-                background-color: #f0f0f0; /* Light gray background for the bubble */
+                background-color: #f0f0f0; 
                 padding: 20px;
-                border-radius: 15px; /* Rounded corners for the bubble effect */
-                border: 1px solid #ddd; /* Slight border to define the bubble */
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-                margin-bottom: 20px; /* Space below each member bubble */
+                border-radius: 15px; 
+                border: 1px solid #ddd; 
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+                margin-bottom: 20px; 
             }}
             .member-name {{
                 font-size: 20px;
@@ -299,49 +338,56 @@ with tabs[2]:
             </div>
             """, unsafe_allow_html=True)
         
-        # with col2:
-        #     st.markdown(f"""
-        #     <div class="team-member">
-        #         <div class="member-name">{member['name']}</div>
-        #         <div class="member-title">{member['title']}</div>
-        #         <div class="member-bio">{member['bio']}</div>
-        #         <div class="member-contact">
-        #             <a href="https://github.com/{member['github']}" target="_blank" class="social-icon">
-        #                 <i class="fab fa-github"></i>
-        #             </a>
-        #             <a href="mailto:{member['email']}" class="social-icon">
-        #                 <i class="far fa-envelope"></i>
-        #             </a>
-        #             <a href="https://www.linkedin.com/in/{member['linkedin']}" target="_blank" class="social-icon">
-        #                 <i class="fab fa-linkedin"></i>
-        #             </a>
-        #         </div>
-        #     </div>
-        #     """, unsafe_allow_html=True)
-
-
-
+# About tab
 with tabs[3]:
-    st.title("About the Olympic Sentiment Analyzer")
-    # Load and display torch bearer Lottie animation
+    st.title("About The App")
+    
+    # Load and display torch bearer animation
     lottie_url = "https://lottie.host/93047e01-af1c-425a-89f5-c4d49abc3aaa/LVMzN5PPXM.json"  
     lottie_json = load_lottieurl(lottie_url)
+    st_lottie(lottie_json, height=200)
     
-    st_lottie(lottie_json, height=300)
     st.write("""
     The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Olympic Games. 
-    Our application uses advanced natural language processing and machine learning techniques to process large volumes of 
+    The application uses advanced natural language processing and machine learning techniques to process large volumes of 
     text data from Twitter, news articles and user-submitted content.
+    It was created to provide real-time insights into public opinion and reactions to Olympic events, athletes and related topics.
+    """)
 
-    Key features:
-    - Real-time sentiment analysis of 2024 Olympic-related content
-    - Support for multiple data sources and formats
-    - Interactive visualization of sentiment trends
+    st.subheader("How it works")
+    st.write("""
+    - Tweets are collected using a web-scraping tool known as Octoparse.
+    - Each tweet is analyzed for sentiment using natural language processing.
+    - Results are visualized and updated continuously.
+    """)
+    
+    st.subheader("Technologies used")
+    st.write("""
+    - Python
+    - Streamlit
+    - NLTK for sentiment analysis
+    - Matplotlib and Seaborn for visualizations
+    """)
 
-    This project is developed by a team of data scientists and machine learning experts passionate about sports and data analysis. 
+    st.write("""This project is developed by a team of data scientists and machine learning experts passionate about sports and data analysis. 
     Our goal is to provide valuable insights into public opinion and sentiment trends throughout the 2024 Olympic Games.
     """)
 
-# Footer
+
+# Feedback tab
+with tabs[4]:
+    st.title("We Value Your Feedback")
+    
+    # Feedback form
+    st.subheader("Share Your Thoughts")
+    feedback = st.text_area("What do you think about our Olympic Sentiment Analyzer?")
+    
+    if st.button("Submit Feedback"):
+        if feedback:
+            st.success("Thank you for your feedback!")
+        else:
+            st.warning("Please enter your feedback before submitting.")
+
+# Footer 
 st.markdown("---")
 st.markdown("© 2024 Olympic Sentiment Analyzer. All rights reserved.")
