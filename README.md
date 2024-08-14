@@ -1,6 +1,12 @@
-# sentiment-analysis-2024-olympics
+
 # Sentiment Analysis -Paris Olympics 2024
-![alt text](/Images/image.png)
+
+![image](https://github.com/user-attachments/assets/da5c7863-c963-41ef-8bd2-bd682625821d)
+
+
+
+
+
 ### Overview
 The Paris Olympics 2024 promises to be one of the most significant global events of the decade, uniting nations, cultures, and athletes from around the world. As excitement builds and discussions around the event intensify, understanding public sentiment becomes crucial for stakeholders, including organizers, sponsors, media outlets, and even fans. This project aims to analyze the sentiment of conversations surrounding the Paris Olympics 2024, offering insights into public opinion, perceptions, and the overall sentiment landscape leading up to and during the event.
 ## Goal
@@ -37,11 +43,11 @@ GNU General Public License v3.0
 - Recommendations
 - Writeup
 ## Contributing members
-- [Ivy Atieng] (https://github.com/Atieng)
-- [Evaclaire Wamitu] (https://github.com/Eva-Claire)
-- [Sheila Mulwa] (https://github.com/Sheila-Mulwa)
-- [Titus Kaluma] (https://github.com/Kaluma-67)
-- [Elizabeth Masai] (https://github.com/ElizabethMasai)
+- [Ivy Atieng](https://github.com/Atieng)
+- [Evaclaire Wamitu](https://github.com/Eva-Claire)
+- [Sheila Mulwa](https://github.com/Sheila-Mulwa)
+- [Titus Kaluma](https://github.com/Kaluma-67)
+- [Elizabeth Masai](https://github.com/ElizabethMasai)
 ## Contacts
 - atiengivylisa@gmail.com
 - evamunyika@gmail.com
