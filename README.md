@@ -1,7 +1,9 @@
 
 # Sentiment Analysis -Paris Olympics 2024
 
-![image](https://github.com/user-attachments/assets/5d09106e-335c-4c1d-9d81-ee8dc3012566)
+![image](https://github.com/user-attachments/assets/da5c7863-c963-41ef-8bd2-bd682625821d)
+
+
 
 
 
