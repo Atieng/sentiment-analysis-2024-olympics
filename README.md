@@ -43,11 +43,11 @@ GNU General Public License v3.0
 - Recommendations
 - Writeup
 ## Contributing members
-- [Ivy Atieng] (https://github.com/Atieng)
-- [Evaclaire Wamitu] (https://github.com/Eva-Claire)
-- [Sheila Mulwa] (https://github.com/Sheila-Mulwa)
-- [Titus Kaluma] (https://github.com/Kaluma-67)
-- [Elizabeth Masai] (https://github.com/ElizabethMasai)
+- [Ivy Atieng](https://github.com/Atieng)
+- [Evaclaire Wamitu](https://github.com/Eva-Claire)
+- [Sheila Mulwa](https://github.com/Sheila-Mulwa)
+- [Titus Kaluma](https://github.com/Kaluma-67)
+- [Elizabeth Masai](https://github.com/ElizabethMasai)
 ## Contacts
 - atiengivylisa@gmail.com
 - evamunyika@gmail.com
