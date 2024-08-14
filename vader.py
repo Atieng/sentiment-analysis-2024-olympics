@@ -1,10 +1,19 @@
 import streamlit as st
-import plotly.graph_objects as go
-from streamlit_lottie import st_lottie
-import requests
-from PIL import Image
 import pandas as pd
+import matplotlib.pyplot as plt
+import pickle
+import re
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import requests
+from streamlit_lottie import st_lottie
+from PIL import Image
 import base64
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+import sklearn
+
 
 # Set page configuration
 st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
@@ -17,7 +26,7 @@ def add_bg_image(image_file):
     <style>
     .stApp {{
         background-image: url(data:image/{"png" if image_file.name.endswith("png") else "jpg"};base64,{encoded_string});
-        background-size: 100%; /* Adjust the percentage to zoom out or in */
+        background-size: 100%;
         background-position: top;
         background-repeat: no-repeat;
     }}
@@ -36,44 +45,7 @@ def load_lottieurl(url: str):
         return None
     return r.json()
 
-def display_sentiment_emoticon(sentiment):
-    emoticons = {
-        "positive": "😄",  # Smiley face for positive sentiments
-        "neutral": "😐",   # Neutral face for neutral sentiments
-        "negative": "😞"   # Sad face for negative sentiments
-    } 
-    
-    colors = {
-        "positive": "blue",
-        "neutral": "yellow",
-        "negative": "red"
-    }
-    
-    emoticon = emoticons.get(sentiment, "❓")  # Retrieves emoticon based on the sentiment, returns question mark if sentiment is unknown
-    color = colors.get(sentiment, "black") # Retrieves a color associated with the sentiment, if sentiment not found default color is "black"
-
-    
-    # Display the sentiment emoticon and sentiment text centered on the screen
-    # The emoticon is displayed with a large font size and color based on the sentiment
-    # The sentiment text is shown below the emoticon, centered and styled with the corresponding color based on sentiment
-    st.markdown(f"""
-    <div style="display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 200px;">
-        <span style="font-size: 100px; color: {color};">{emoticon}</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown(f"""
-    <div style="text-align: center; 
-    font-size: 24px; 
-    color: {color};">
-        Sentiment: {sentiment.capitalize()}
-    </div>
-    """, unsafe_allow_html=True)
-
-
+st.markdown("---")
 
 # Olympic ring colors
 ring_colors = ["blue", "yellow", "gray", "green", "red"]
@@ -132,75 +104,136 @@ st.markdown(f"""
 with tabs[0]:
     st.title("Welcome to the 2024 Paris Olympics Sentiment Analyzer")
     
-    # Lottie Olympic-themed animation
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
     st.write("Analyze sentiment of the 2024 Paris Olympics with our advanced tool.")
 
+ 
 # Sentiment analyzer tab
 with tabs[1]:
     st.title("Olympic Sentiment Analyzer")
     
-    # Load and display team Lottie animation
     lottie_url = "https://lottie.host/83213d4d-0fde-4804-86d7-03b17919cf3b/nYDHta6PFS.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
+
+     # Load the pickled VADER model
+    with open('vader_model.pkl', 'rb') as vader_file:
+        loaded_vader = pickle.load(vader_file)
+        
+    # Load the pickled vectorizer
+    with open('tfidf_vectorizer.pkl', 'rb') as vec_file:
+        loaded_vectorizer = pickle.load(vec_file)
     
-    # Initialize sentiment to a default value
-    sentiment = "neutral"
-    # File upload
-    uploaded_file = st.file_uploader("Upload your data (CSV or TXT)", type=["csv", "txt"])
+    def clean_tweet(tweet):
+        # Remove URLs
+        tweet = re.sub(r'http\S+|www\S+|https\S+', '', tweet, flags=re.MULTILINE)
+        # Remove user @ references
+        tweet = re.sub(r'\@\w+', '', tweet)
+        return tweet.strip()
     
-    def dummy_sentiment_analysis(text):
-        # Basic sentiment keywords
-        positive_keywords = ["happy", "good", "great", "excellent", "fantastic", "amazing"]
-        negative_keywords = ["bad", "terrible", "poor", "awful", "horrible", "sad"]
-    
-        # Convert text to lowercase for keyword matching
-        text_lower = text.lower()
-    
-        # Check for positive and negative keywords
-        positive_count = sum(word in text_lower for word in positive_keywords)
-        negative_count = sum(word in text_lower for word in negative_keywords)
-    
-        if positive_count > negative_count:
-            return "positive"
-        elif negative_count > positive_count:
-            return "negative"
+    # Function to get sentiment emoticon
+    def get_sentiment_emoticon(sentiment):
+        emoticons = {
+            "POSITIVE": "😄",
+            "NEUTRAL": "😐",
+            "NEGATIVE": "😞"
+        }
+        return emoticons.get(sentiment, "❓") 
+
+    # Function to analyze sentiment using VADER
+    def analyze_sentiment_vader(text):
+        # Preprocess the text using the loaded vectorizer (if you want to combine TF-IDF with VADER)
+        text_transformed = loaded_vectorizer.transform([text])
+        
+        # Use the VADER model to predict the sentiment
+        vader_scores = loaded_vader.polarity_scores(text)
+        
+        # Determine sentiment based on VADER compound score
+        compound_score = vader_scores['compound']
+        if compound_score >= 0.05:
+            sentiment = 'POSITIVE'
+        elif compound_score <= -0.05:
+            sentiment = 'NEGATIVE'
         else:
-            return "neutral"
-            
-    if uploaded_file is not None:
-        if uploaded_file.type == "text/csv":
-            df = pd.read_csv(uploaded_file)
-            df["sentiment"] = df["text"].apply(lambda x: dummy_sentiment_analysis(x))
-            df["emoticon"] = df["sentiment"].apply(get_sentiment_emoticon)  # Add emoticon column 
-            st.write(df) # Display the DataFrame
-            
-            # Set sentiment to the predominant sentiment in the DataFrame when needed
-            sentiment = df["sentiment"].mode()[0] if not df["sentiment"].empty else "neutral"
-        else:
-            content = uploaded_file.getvalue().decode("utf-8")
-            sentiment = dummy_sentiment_analysis(content)
-    else:
-        user_input = st.text_area("..or enter text to analyze:")
-        if st.button("Analyze Sentiment"):
-            sentiment = dummy_sentiment_analysis(user_input) if user_input else "neutral"
-            
-    # Display sentiment emoticon
-    display_sentiment_emoticon(sentiment)
+            sentiment = 'NEUTRAL'
+        
+        return sentiment, compound_score, get_sentiment_emoticon(sentiment)
+
+    # Option to choose between manual input and file upload
+    analysis_option = st.radio("Choose analysis option:", ["Manual Input", "File Upload"])
+
+    if analysis_option == "Manual Input":
+        tweet = st.text_area("Enter a tweet to analyze sentiment:")
+        
+        if st.button("Analyze"):
+            if tweet:
+                label, score, emoticon = analyze_sentiment_vader(tweet)
+                st.markdown(f"""
+                <div style="text-align: center;">
+                    <span style="font-size: 100px;">{emoticon}</span>
+                    <div style="font-size: 24px;">Sentiment: {label}</div>
+                    <div style="font-size: 18px;">Confidence Score: {score:.2f}</div>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.warning("Please enter a tweet before analyzing.")
+
+    else:  # File Upload option
+        uploaded_file = st.file_uploader("Upload a CSV or TXT file", type=["csv", "txt"])
+        
+        if uploaded_file is not None:
+            if uploaded_file.name.endswith('.csv'): # .csv file
+                df = pd.read_csv(uploaded_file)
+                text_column = st.selectbox("Select the column containing the text to analyze:", df.columns)
+            else:  # .txt file
+                content = uploaded_file.getvalue().decode("utf-8")
+                df = pd.DataFrame({"Text": content.split('\n')})
+                text_column = "Text"
+
+            if st.button("Analyze File"):
+                # Apply sentiment analysis to each row
+                results = [analyze_sentiment_vader(text) for text in df[text_column]]
+                
+                # Create new columns for sentiment, score, and emoticon
+                df['Sentiment'] = [r[0] for r in results]
+                df['Score'] = [r[1] for r in results]
+                df['Emoticon'] = [r[2] for r in results]
+
+                # Display results
+                st.write(df)
+
+                # Display summary
+                st.subheader("Summary")
+                sentiment_counts = df['Sentiment'].value_counts()
+                
+                # Map sentiments to colors
+                colors = sentiment_counts.index.map({
+                    'POSITIVE': 'blue',
+                    'NEGATIVE': 'red',
+                    'NEUTRAL': 'gray'
+                })
+                
+                # Create the bar plot with the specified colors
+                fig, ax = plt.subplots()
+                sentiment_counts.plot(kind='bar', ax=ax, color=colors)
+                plt.title("Sentiment Distribution")
+                plt.xlabel("Sentiment")
+                plt.ylabel("Count")
+                st.pyplot(fig)
+
+    st.markdown("---")
+
 
 # Team tab
 with tabs[2]:
     st.title("The Data Sentinels")
     
-    # Load and display team animation
     lottie_url = "https://lottie.host/18039274-4e01-4558-845e-a1d1d3b950eb/cKT9Btma01.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
 
-    # Add link to Font Awesome CSS file to retrieve social media icons
     st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -216,7 +249,6 @@ with tabs[2]:
     </style>
     """, unsafe_allow_html=True)
     
-    # Team members info
     team_members = [
         {
             "name": "Ivy Atieng",
@@ -265,7 +297,6 @@ with tabs[2]:
         }
     ]
 
-    # Loop through each team member and display info and image, if image not found, display placeholder image
     for member in team_members:
         col1, col2 = st.columns([1, 3])
         
@@ -274,16 +305,8 @@ with tabs[2]:
                 image = Image.open(member["image"])
                 st.image(image, width=150)
             except FileNotFoundError:
-                st.image("https://via.placeholder.com/200", width=200)
+                st.image("https://via.placeholder.com/200", width=1500)
                 
-
-        # Define CSS styles for the team member section:
-        # - The "team-member" class creates a light gray bubble with padding, rounded corners, a slight border and a shadow for depth
-        # - The "member-name" class styles the team member's name with bold font, a larger font size and black color
-        # - The "member-title" class styles the team member's title with blue color, italic font style and a smaller font size than member name
-        # - The "member-bio" class adds space below the bio text and styles it with black color
-        # - The "member-contact" class adds styling for the contact icons including color, margin and hover effects
-        # Display the team member's name, title, bio and contact links within a styled div element
         with col2:
             st.markdown(f"""
             <style>
@@ -305,7 +328,7 @@ with tabs[2]:
                 font-size: 16px;
                 color: blue;
                 margin-bottom: 10px;
-                font-style: italic; /* Italicize the title */
+                font-style: italic;
             }}
             .member-bio {{
                 margin-bottom: 10px;
@@ -313,11 +336,11 @@ with tabs[2]:
             }}
             .member-contact a {{
                 margin-right: 10px;
-                color: #007bff; /* Color for the icons */
+                color: #007bff;
                 text-decoration: none;
             }}
             .member-contact a:hover {{
-                color: #0056b3; /* Darker color on hover */
+                color: #0056b3;
             }}
             </style>
             <div class="team-member">
@@ -342,7 +365,6 @@ with tabs[2]:
 with tabs[3]:
     st.title("About The App")
     
-    # Load and display torch bearer animation
     lottie_url = "https://lottie.host/93047e01-af1c-425a-89f5-c4d49abc3aaa/LVMzN5PPXM.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
@@ -373,12 +395,10 @@ with tabs[3]:
     Our goal is to provide valuable insights into public opinion and sentiment trends throughout the 2024 Olympic Games.
     """)
 
-
 # Feedback tab
 with tabs[4]:
     st.title("We Value Your Feedback")
     
-    # Feedback form
     st.subheader("Share Your Thoughts")
     feedback = st.text_area("What do you think about our Olympic Sentiment Analyzer?")
     
@@ -387,6 +407,15 @@ with tabs[4]:
             st.success("Thank you for your feedback!")
         else:
             st.warning("Please enter your feedback before submitting.")
+
+    st.markdown("---")
+            
+    st.subheader("Rate Our App")
+
+    rating = st.radio("Select your rating:", options=[1, 2, 3, 4, 5], index=2)
+    
+    if st.button("Submit Rating"):
+        st.success(f"Thank you for rating us {rating} star(s)!")
 
 # Footer 
 st.markdown("---")
