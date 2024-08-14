@@ -1,6 +1,10 @@
-# sentiment-analysis-2024-olympics
+
 # Sentiment Analysis -Paris Olympics 2024
-![alt text](/Images/image.png)
+
+![image](https://github.com/user-attachments/assets/5d09106e-335c-4c1d-9d81-ee8dc3012566)
+
+
+
 ### Overview
 The Paris Olympics 2024 promises to be one of the most significant global events of the decade, uniting nations, cultures, and athletes from around the world. As excitement builds and discussions around the event intensify, understanding public sentiment becomes crucial for stakeholders, including organizers, sponsors, media outlets, and even fans. This project aims to analyze the sentiment of conversations surrounding the Paris Olympics 2024, offering insights into public opinion, perceptions, and the overall sentiment landscape leading up to and during the event.
 ## Goal
