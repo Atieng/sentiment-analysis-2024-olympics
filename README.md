@@ -107,7 +107,7 @@ GNU General Public License v3.0
 
 Kindly don't hesitate to reach out to the team if you have any questions.
 
-### Repository Structure
+## Repository Structure
 
 ```
 Sentiment Analysis-Paris Olympics 2024/
