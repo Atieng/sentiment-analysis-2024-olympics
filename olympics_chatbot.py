@@ -4,17 +4,15 @@ import openai
 # Initialize the OpenAI API with your API key
 openai.api_key = "your-openai-api-key"
 
-# Function to generate a response from ChatGPT
+# Function to generate a response from ChatGPT using the updated API
 def generate_response(prompt):
-    response = openai.Completion.create(
-        engine="text-davinci-003",  # Use the appropriate engine
-        prompt=prompt,
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",  # Use the appropriate model, such as "gpt-3.5-turbo" or "gpt-4"
+        messages=[{"role": "user", "content": prompt}],
         max_tokens=150,
-        n=1,
-        stop=None,
         temperature=0.7,
     )
-    message = response.choices[0].text.strip()
+    message = response['choices'][0]['message']['content'].strip()
     return message
 
 # Streamlit app layout
@@ -46,3 +44,4 @@ if st.session_state.history:
     st.write("### Conversation History")
     for i, message in enumerate(st.session_state.history):
         st.write(message)
+        
