@@ -1,19 +1,19 @@
 import streamlit as st
 import openai
 
-# Initialize the OpenAI API with your API key
+# Set your OpenAI API key
 openai.api_key = "your-openai-api-key"
 
-# Function to generate a response from ChatGPT using the updated API
+# Function to generate a response using the latest API
 def generate_response(prompt):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+    response = openai.chat_completions.create(
+        model="gpt-3.5-turbo",  # Specify the model
         messages=[
-            {"role": "system", "content": "You are a helpful assistant specialized in the Olympics."},
+            {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt},
-        ],
+        ]
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 # Streamlit app layout
 st.title("Olympics Chatbot")
