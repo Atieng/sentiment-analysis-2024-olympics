@@ -1,40 +1,40 @@
-import pandas as pd
-import os
 import streamlit as st
+import pandas as pd
 
-# Load the individual CSV files
-schedules = pd.read_csv('Paris_olympics_data/schedules.csv')
-schedules_preliminary = pd.read_csv('Paris_olympics_data/schedules_preliminary.csv')
-teams = pd.read_csv('Paris_olympics_data/teams.csv')
-torch_route = pd.read_csv('Paris_olympics_data/torch_route.csv')
-venues = pd.read_csv('Paris_olympics_data/venues.csv')
-athletes = pd.read_csv('Paris_olympics_data/athletes.csv')
-coaches = pd.read_csv('Paris_olympics_data/coaches.csv')
-events = pd.read_csv('Paris_olympics_data/events.csv')
-medallists = pd.read_csv('Paris_olympics_data/medallists.csv')
-medals = pd.read_csv('Paris_olympics_data/medals.csv')
-medals_total = pd.read_csv('Paris_olympics_data/medals_total.csv')
+dataset = pd.read_csv('cleaned_olympics_data.csv')
 
-# Load the results folder contents
-results_folder = 'Paris_olympics_data/results'
-results_files = {file.split('.')[0]: pd.read_csv(os.path.join(results_folder, file))
-                 for file in os.listdir(results_folder) if file.endswith('.csv')}
-
+# Function to get medal count by country
 def get_medal_count_by_country(country):
-    return medals_total[medals_total['Country'] == country].to_dict(orient='records')
-
-def get_athlete_info(athlete_name):
-    return athletes[athletes['Name'].str.contains(athlete_name, case=False, na=False)].to_dict(orient='records')
-
-def get_sport_results(sport):
-    sport_results = results_files.get(sport.lower())
-    if sport_results is not None:
-        return sport_results.to_dict(orient='records')
+    # Normalize country name to avoid partial matches and case sensitivity issues
+    country_matches = dataset[dataset['country'].str.lower() == country.lower()]
+    
+    if not country_matches.empty:
+        summary = country_matches.groupby('medal_type').size().to_dict()
+        return summary
     else:
-        return f"No results found for {sport}."
-st.title("olympics_chatbot")
+        return f"No medal information found for {country}."
 
-user_query = st.text_input("Ask me about the Olympics:")
+# Function to get medals won by a specific athlete
+def get_medals_by_athlete(athlete_name):
+    athlete_medals = dataset[dataset['name'].str.contains(athlete_name, case=False, na=False)]
+    if not athlete_medals.empty:
+        return athlete_medals[['medal_date', 'medal_type', 'event']]
+    else:
+        return f"No medal information found for athlete {athlete_name}."
+
+# Function to get event details
+def get_medals_by_event(event_name):
+    event_medals = dataset[dataset['event'].str.contains(event_name, case=False, na=False)]
+    if not event_medals.empty:
+        return event_medals[['medal_date', 'medal_type', 'name', 'country']]
+    else:
+        return f"No medal information found for event {event_name}."
+
+# Streamlit app setup
+st.title("Paris 2024 Olympics Medals")
+
+# Input for user query
+user_query = st.text_input("Ask me anything about the Paris 2024 Olympics:")
 
 if user_query:
     if "medal" in user_query.lower():
@@ -45,12 +45,14 @@ if user_query:
     elif "athlete" in user_query.lower():
         athlete_name = st.text_input("Enter the athlete's name:")
         if athlete_name:
-            response = get_athlete_info(athlete_name)
+            response = get_medals_by_athlete(athlete_name)
             st.write(response)
-    elif "result" in user_query.lower():
-        sport = st.text_input("Enter the sport name:")
-        if sport:
-            response = get_sport_results(sport)
+    elif "event" in user_query.lower():
+        event_name = st.text_input("Enter the event name:")
+        if event_name:
+            response = get_medals_by_event(event_name)
             st.write(response)
     else:
-        st.write("Sorry, I didn't understand the query.")
+        # If none of the above keywords are found, assume the query is about a country
+        response = get_medal_count_by_country(user_query)
+        st.write(response)
