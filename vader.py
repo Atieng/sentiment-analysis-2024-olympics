@@ -36,7 +36,7 @@ def add_bg_image(image_file):
     )
 
 # Call the function with your image file
-add_bg_image("images/background.jpg")
+add_bg_image("Images/background.jpg")
 
 # Load Lottie animations
 def load_lottieurl(url: str):
@@ -107,7 +107,7 @@ with tabs[0]:
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
-    st.write("Analyze sentiment of the 2024 Paris Olympics with our advanced tool.")
+    st.write("Analyze sentiments based off the 2024 Paris Olympics with our advanced tool.")
 
  
 # Sentiment analyzer tab
