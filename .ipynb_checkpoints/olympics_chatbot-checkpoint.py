@@ -7,13 +7,13 @@ openai.api_key = "your-openai-api-key"
 # Function to generate a response from ChatGPT using the updated API
 def generate_response(prompt):
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # Use the appropriate model, such as "gpt-3.5-turbo" or "gpt-4"
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=150,
-        temperature=0.7,
+        model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant specialized in the Olympics."},
+            {"role": "user", "content": prompt},
+        ],
     )
-    message = response['choices'][0]['message']['content'].strip()
-    return message
+    return response['choices'][0]['message']['content']
 
 # Streamlit app layout
 st.title("Olympics Chatbot")
@@ -43,5 +43,5 @@ if user_input and chatgpt_response:
 # Display conversation history
 if st.session_state.history:
     st.write("### Conversation History")
-    for i, message in enumerate(st.session_state.history):
+    for message in st.session_state.history:
         st.write(message)
