@@ -1,5 +1,5 @@
 
-# Sentiment Analysis -Paris Olympics 2024
+# Sentiment Analysis-Paris Olympics 2024
 
 ![image](https://github.com/user-attachments/assets/da5c7863-c963-41ef-8bd2-bd682625821d)
 
@@ -65,9 +65,6 @@ pip install -r requirements.txt
 streamlit run vader.py
 ```
 
-## License
-GNU General Public License v3.0
-
 ## 🔗 Libraries and Tools Used
 ![numpy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)
 ![pandas](https://img.shields.io/badge/Pandas-2C2D72?style=for-the-badge&logo=pandas&logoColor=white)
@@ -88,6 +85,36 @@ GNU General Public License v3.0
 - Conclusion
 - Recommendations
 - Writeup
+
+## License
+GNU General Public License v3.0
+
+### Repository Structure
+
+```
+Sentiment Analysis-Paris Olympics 2024/
+│
+└── Project Files/
+    ├── .ipynb_checkpoints
+    ├── Images
+    ├── Models
+    ├── X_data
+    ├── data
+    ├── the_team
+    ├── .DS_Store
+    ├── .gitattributes
+    ├── .gitignore
+    ├── 2024-olympics-sentiments.csv
+    ├── LICENSE
+    ├── Modelling.ipynb
+    ├── README.md
+    ├── cleaned-sentiments.csv
+    ├── requirements.txt
+    ├── sentiment.ipynb
+    ├── sentiment_analysis_paris_olympics.docx
+    └── vader.py
+      
+```
 
 ## Contributing members
 - [Ivy Atieng](https://github.com/Atieng)
