@@ -23,6 +23,7 @@ st.write("Ask anything about the Olympics!")
 user_input = st.text_input("You:", placeholder="Ask me about the Olympics...")
 
 # Button to submit the query
+chatgpt_response = None
 if st.button("Send"):
     if user_input:
         # Generate the response
@@ -35,7 +36,7 @@ if st.button("Send"):
 if "history" not in st.session_state:
     st.session_state.history = []
 
-if user_input:
+if user_input and chatgpt_response:
     st.session_state.history.append(f"You: {user_input}")
     st.session_state.history.append(f"ChatGPT: {chatgpt_response}")
 
@@ -44,4 +45,3 @@ if st.session_state.history:
     st.write("### Conversation History")
     for i, message in enumerate(st.session_state.history):
         st.write(message)
-        
