@@ -119,11 +119,11 @@ with tabs[1]:
     st_lottie(lottie_json, height=200)
 
      # Load the pickled VADER model
-    with open('vader_model.pkl', 'rb') as vader_file:
+    with open('Models/vader_model.pkl', 'rb') as vader_file:
         loaded_vader = pickle.load(vader_file)
         
     # Load the pickled vectorizer
-    with open('tfidf_vectorizer.pkl', 'rb') as vec_file:
+    with open('Models/tfidf_vectorizer.pkl', 'rb') as vec_file:
         loaded_vectorizer = pickle.load(vec_file)
     
     def clean_tweet(tweet):
