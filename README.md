@@ -89,6 +89,24 @@ streamlit run vader.py
 ## License
 GNU General Public License v3.0
 
+
+
+## Contributing members
+- [Ivy Atieng](https://github.com/Atieng)
+- [Evaclaire Wamitu](https://github.com/Eva-Claire)
+- [Sheila Mulwa](https://github.com/Sheila-Mulwa)
+- [Titus Kaluma](https://github.com/Kaluma-67)
+- [Elizabeth Masai](https://github.com/ElizabethMasai)
+  
+## Contacts
+- atiengivylisa@gmail.com
+- evamunyika@gmail.com
+- sheila.n.mulwa@gmail.com
+- mwirigikaluma@gmail.com
+- elizabethchemtaim@gmail.com
+
+Kindly don't hesitate to reach out to the team if you have any questions.
+
 ### Repository Structure
 
 ```
@@ -115,22 +133,5 @@ Sentiment Analysis-Paris Olympics 2024/
     └── vader.py
       
 ```
-
-## Contributing members
-- [Ivy Atieng](https://github.com/Atieng)
-- [Evaclaire Wamitu](https://github.com/Eva-Claire)
-- [Sheila Mulwa](https://github.com/Sheila-Mulwa)
-- [Titus Kaluma](https://github.com/Kaluma-67)
-- [Elizabeth Masai](https://github.com/ElizabethMasai)
-  
-## Contacts
-- atiengivylisa@gmail.com
-- evamunyika@gmail.com
-- sheila.n.mulwa@gmail.com
-- mwirigikaluma@gmail.com
-- elizabethchemtaim@gmail.com
-
-Kindly don't hesitate to reach out to the team if you have any questions.
-
 
 
