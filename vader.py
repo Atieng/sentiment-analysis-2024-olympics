@@ -35,7 +35,7 @@ def add_bg_image(image_file):
     unsafe_allow_html=True
     )
 
-# Call the function with your image file
+# Call the add background image function 
 add_bg_image("Images/background.jpg")
 
 # Load Lottie animations
@@ -144,7 +144,8 @@ with tabs[1]:
 
     # Function to analyze sentiment using VADER
     def analyze_sentiment_vader(text):
-        # Preprocess the text using the loaded vectorizer (if you want to combine TF-IDF with VADER)
+        
+        # Preprocess the text using the loaded vectorizer 
         text_transformed = loaded_vectorizer.transform([text])
         
         # Use the VADER model to predict the sentiment
@@ -196,7 +197,7 @@ with tabs[1]:
                 # Apply sentiment analysis to each row
                 results = [analyze_sentiment_vader(text) for text in df[text_column]]
                 
-                # Create new columns for sentiment, score, and emoticon
+                # Create new columns for sentiment, score and emoticon
                 df['Sentiment'] = [r[0] for r in results]
                 df['Score'] = [r[1] for r in results]
                 df['Emoticon'] = [r[2] for r in results]
@@ -215,7 +216,7 @@ with tabs[1]:
                     'NEUTRAL': 'gray'
                 })
                 
-                # Create the bar plot with the specified colors
+                # Create a bar plot color coded as per sentiment
                 fig, ax = plt.subplots()
                 sentiment_counts.plot(kind='bar', ax=ax, color=colors)
                 plt.title("Sentiment Distribution")
@@ -229,11 +230,11 @@ with tabs[1]:
 # Team tab
 with tabs[2]:
     st.title("The Data Sentinels")
-    
+    # Load Lottie animation
     lottie_url = "https://lottie.host/18039274-4e01-4558-845e-a1d1d3b950eb/cKT9Btma01.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
-
+    # Style contact icons
     st.markdown("""
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -248,7 +249,7 @@ with tabs[2]:
         }
     </style>
     """, unsafe_allow_html=True)
-    
+    # Team member details
     team_members = [
         {
             "name": "Ivy Atieng",
@@ -296,18 +297,18 @@ with tabs[2]:
             "linkedin": "evaclaire-munyika-991295114"
         }
     ]
-
+    # Create two columns and loop through each member applying custom styles
     for member in team_members:
         col1, col2 = st.columns([1, 3])
         
-        with col1:
+        with col1: # Add member images
             try:
                 image = Image.open(member["image"])
                 st.image(image, width=150)
             except FileNotFoundError:
                 st.image("https://via.placeholder.com/200", width=1500)
                 
-        with col2:
+        with col2: # Apply custom styles
             st.markdown(f"""
             <style>
             .team-member {{
@@ -364,16 +365,16 @@ with tabs[2]:
 # About tab
 with tabs[3]:
     st.title("About The App")
-    
+    # Load lottie animation
     lottie_url = "https://lottie.host/93047e01-af1c-425a-89f5-c4d49abc3aaa/LVMzN5PPXM.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
     
     st.write("""
-    The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Olympic Games. 
+    The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Paris Olympic Games. 
     The application uses advanced natural language processing and machine learning techniques to process large volumes of 
-    text data from Twitter, news articles and user-submitted content.
-    It was created to provide real-time insights into public opinion and reactions to Olympic events, athletes and related topics.
+    text data from Twitter and user-submitted content.
+    It was created to provide real-time insights into public opinion and reactions to Olympic events, athletes and other related topics.
     """)
 
     st.subheader("How it works")
@@ -387,7 +388,9 @@ with tabs[3]:
     st.write("""
     - Python
     - Streamlit
-    - NLTK for sentiment analysis
+    - Pandas for data manipulation and analysis
+    - NLTK and VaderSentiment for sentiment analysis
+    - Scikit-Learn for machine learning operations
     - Matplotlib and Seaborn for visualizations
     """)
 
