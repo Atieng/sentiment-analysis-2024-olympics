@@ -270,7 +270,7 @@ with tabs[2]:
         },
         {
             "name": "Elizabeth Masai",
-            "title": "Visualization Specialist",
+            "title": "Data Visualization Specialist",
             "bio": "Elizabeth excels at creating insightful and interactive data visualizations. Her skills are essential for presenting our findings in a clear and impactful manner.",
             "image": "the_team/elizabeth.jpg",
             "github": "ElizabethMasai",
@@ -279,8 +279,8 @@ with tabs[2]:
         },
         {
             "name": "Sheila Mulwa",
-            "title": "Presentation Expert",
-            "bio": "Sheila brings a unique blend of analytical thinking and creative flair to our team by creating compelling visual narratives and engaging presentations that make our findings accessible to both technical and non-technical audiences.",
+            "title": "Data Narrative Architect",
+            "bio": "Sheila blends her data science and machine learning expertise with creativity, turning complex datasets into insightful visual narratives. Her engaging presentations make our models and findings accessible to both technical and non-technical audiences.",
             "image": "the_team/sheila.jpg",
             "github": "Sheila-Mulwa",
             "email": "sheila.n.mulwa@gmail.com",
