@@ -124,10 +124,7 @@ with tabs[1]:
 
     # Function to analyze sentiment using VADER
     def analyze_sentiment_vader(text):
-        
-        # Preprocess the text using the loaded vectorizer 
-        text_transformed = loaded_vectorizer.transform([text])
-        
+    
         # Use the VADER model to predict the sentiment
         vader_scores = loaded_vader.polarity_scores(text)
         
