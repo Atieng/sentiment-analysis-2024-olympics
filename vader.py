@@ -197,9 +197,6 @@ with tabs[1]:
                 plt.ylabel("Count")
                 st.pyplot(fig)
 
-    st.markdown("---")
-
-
 # Team tab
 with tabs[2]:
     st.title("The Data Sentinels")
