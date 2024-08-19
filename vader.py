@@ -18,26 +18,6 @@ import sklearn
 # Set page configuration
 st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
 
-def add_bg_image(image_file):
-    with open(image_file, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
-    st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background-image: url(data:image/{"png" if image_file.name.endswith("png") else "jpg"};base64,{encoded_string});
-        background-size: 100%;
-        background-position: top;
-        background-repeat: no-repeat;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
-
-# Call the add background image function 
-add_bg_image("Images/background.jpg")
-
 # Load Lottie animations
 def load_lottieurl(url: str):
     r = requests.get(url)
