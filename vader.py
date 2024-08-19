@@ -16,7 +16,7 @@ import sklearn
 
 
 # Set page configuration
-st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
+st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide", page_icon="🏅")
 
 # Load Lottie animations
 def load_lottieurl(url: str):
@@ -87,7 +87,7 @@ with tabs[0]:
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
-    st.write("Analyze sentiments of the 2024 Paris Olympics with our advanced tool.")
+    st.write("Discover sentiments behind the 2024 Paris Olympics with our advanced tool.")
 
  
 # Sentiment analyzer tab
