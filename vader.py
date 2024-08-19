@@ -24,7 +24,7 @@ def load_lottieurl(url: str):
     if r.status_code != 200:
         return None
     return r.json()
-
+    
 st.markdown("---")
 
 # Olympic ring colors
@@ -87,7 +87,7 @@ with tabs[0]:
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
-    st.write("Analyze sentiments based off the 2024 Paris Olympics with our advanced tool.")
+    st.write("Analyze sentiments of the 2024 Paris Olympics with our advanced tool.")
 
  
 # Sentiment analyzer tab
@@ -102,10 +102,6 @@ with tabs[1]:
     with open('Models/vader_model.pkl', 'rb') as vader_file:
         loaded_vader = pickle.load(vader_file)
         
-    # Load the pickled vectorizer
-    with open('Models/tfidf_vectorizer.pkl', 'rb') as vec_file:
-        loaded_vectorizer = pickle.load(vec_file)
-    
     def clean_tweet(tweet):
         # Remove URLs
         tweet = re.sub(r'http\S+|www\S+|https\S+', '', tweet, flags=re.MULTILINE)
@@ -361,15 +357,15 @@ with tabs[3]:
     - Results are visualized and updated continuously.
     """)
     
-    st.subheader("Technologies used")
-    st.write("""
-    - Python
-    - Streamlit
-    - Pandas for data manipulation and analysis
-    - NLTK and VaderSentiment for sentiment analysis
-    - Scikit-Learn for machine learning operations
-    - Matplotlib and Seaborn for visualizations
-    """)
+    # st.subheader("Technologies used")
+    # st.write("""
+    # - Python
+    # - Streamlit
+    # - Pandas for data manipulation and analysis
+    # - NLTK and VaderSentiment for sentiment analysis
+    # - Scikit-Learn for machine learning operations
+    # - Matplotlib and Seaborn for visualizations
+    # """)
 
     st.write("""This project is developed by a team of data scientists and machine learning experts passionate about sports and data analysis. 
     Our goal is to provide valuable insights into public opinion and sentiment trends throughout the 2024 Olympic Games.
