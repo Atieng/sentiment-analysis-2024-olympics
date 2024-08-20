@@ -18,6 +18,7 @@ from nltk.stem import WordNetLemmatizer
 import sklearn
 
 # Download required NLTK data
+nltk.download('punkt')
 nltk.download('vader_lexicon')
 nltk.download('stopwords')
 nltk.download('wordnet')
