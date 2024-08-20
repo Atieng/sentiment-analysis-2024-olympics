@@ -221,6 +221,8 @@ with tabs[2]:
     st_lottie(lottie_json, height=200)
 
     def preprocess_text(text):
+        if not isinstance(text, str):
+            return str(text)
         # Convert to lowercase
         text = text.lower()
         
@@ -276,6 +278,9 @@ with tabs[2]:
     
         # 1. Word Cloud
         st.subheader("Word Cloud of Tweets")
+        # Convert all Tweet_Content entries to strings and handle NaNs
+        df['Tweet_Content'] = df['Tweet_Content'].astype(str).fillna('')
+        # Join the tweets into a single text
         text = " ".join(tweet for tweet in df['Tweet_Content'])
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
         plt.figure(figsize=(10, 5))
