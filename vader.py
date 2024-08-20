@@ -37,7 +37,7 @@ def load_lottieurl(url: str):
 st.markdown("---")
 
 # Olympic ring colors
-ring_colors = ["blue", "yellow", "gray", "green", "red", "purple"]
+ring_colors = ["blue", "yellow", "black", "green", "red", "purple"]
 
 # Create tabs
 tabs = st.tabs(["🏠 Home", "📊 Analyzer", "📈 Dashboard", "👥 The Team", "ℹ️ Info", "💬 Feedback"])
@@ -282,7 +282,7 @@ with tabs[2]:
         df['Tweet_Content'] = df['Tweet_Content'].astype(str).fillna('')
         # Join the tweets into a single text
         text = " ".join(tweet for tweet in df['Tweet_Content'])
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+        wordcloud = WordCloud(width=800, height=400, background_color='white', colormap="Dark2").generate(text)
         plt.figure(figsize=(10, 5))
         plt.imshow(wordcloud, interpolation='bilinear')
         plt.axis('off')
@@ -291,7 +291,7 @@ with tabs[2]:
         # 2. Sentiment Distribution
         st.subheader("Sentiment Distribution")
         fig, ax = plt.subplots()
-        df['sentiment'].value_counts().plot(kind='bar', ax=ax)
+        df['sentiment'].value_counts().plot(kind='bar', ax=ax , colormap="viridis")
         plt.title("Sentiment Distribution")
         plt.xlabel("Sentiment")
         plt.ylabel("Count")
@@ -301,7 +301,7 @@ with tabs[2]:
         st.subheader("Sentiment Over Time")
         daily_sentiment = df.groupby('date')['sentiment_score'].mean().reset_index()
         fig, ax = plt.subplots(figsize=(12, 6))
-        ax.plot(daily_sentiment['date'], daily_sentiment['sentiment_score'])
+        ax.plot(daily_sentiment['date'], daily_sentiment['sentiment_score'], color='#000080')
         plt.title("Average Sentiment Score Over Time")
         plt.xlabel("Date")
         plt.ylabel("Average Sentiment Score")
@@ -313,7 +313,7 @@ with tabs[2]:
         hashtags = ' '.join(df['Tweet_Content'].apply(lambda x: ' '.join(re.findall(r'#\w+', x.lower())))).split()
         hashtag_counts = pd.Series(hashtags).value_counts().head(10)
         fig, ax = plt.subplots()
-        hashtag_counts.plot(kind='bar', ax=ax)
+        hashtag_counts.plot(kind='bar', ax=ax, colormap="Dark2")
         plt.title("Top 10 Hashtags")
         plt.xlabel("Hashtag")
         plt.ylabel("Count")
@@ -324,7 +324,7 @@ with tabs[2]:
         st.subheader("Tweet Volume Over Time")
         tweet_volume = df.groupby('date').size().reset_index(name='count')
         fig, ax = plt.subplots(figsize=(12, 6))
-        ax.plot(tweet_volume['date'], tweet_volume['count'])
+        ax.plot(tweet_volume['date'], tweet_volume['count'], color='#FFD700')
         plt.title("Tweet Volume Over Time")
         plt.xlabel("Date")
         plt.ylabel("Number of Tweets")
@@ -338,7 +338,7 @@ with tabs[2]:
         words = [word for word in words if word not in stop_words and len(word) > 3]
         word_freq = pd.Series(words).value_counts().head(20)
         fig, ax = plt.subplots(figsize=(12, 6))
-        word_freq.plot(kind='bar', ax=ax)
+        word_freq.plot(kind='bar', ax=ax, colormap="Dark2")
         plt.title("Top 20 Most Common Words")
         plt.xlabel("Word")
         plt.ylabel("Frequency")
@@ -489,33 +489,24 @@ with tabs[4]:
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
     
-    st.write("""
-    The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Paris Olympic Games. 
-    The application uses advanced natural language processing and machine learning techniques to process large volumes of 
-    text data from Twitter and user-submitted content.
-    It was created to provide real-time insights into public opinion and reactions to Olympic events, athletes and other related topics.
-    """)
-
-    st.subheader("How it works")
-    st.write("""
-    - Tweets are collected using a web-scraping tool known as Octoparse.
-    - Each tweet is analyzed for sentiment using natural language processing.
-    - Results are visualized and updated continuously.
-    """)
+    st.write(""" The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Paris Olympic Games. Our application leverages advanced natural language processing and machine learning techniques to process large volumes of text data from X and user-submitted content.
     
-    # st.subheader("Technologies used")
-    # st.write("""
-    # - Python
-    # - Streamlit
-    # - Pandas for data manipulation and analysis
-    # - NLTK and VaderSentiment for sentiment analysis
-    # - Scikit-Learn for machine learning operations
-    # - Matplotlib and Seaborn for visualizations
-    # """)
+Key features:
 
-    st.write("""This project is developed by a team of data scientists and machine learning experts passionate about sports and data analysis. 
-    Our goal is to provide valuable insights into public opinion and sentiment trends throughout the 2024 Olympic Games.
-    """)
+⭐️Real-time sentiment analysis of Olympic-related tweets
+
+⭐️User-friendly interface for analyzing individual tweets or batch uploads
+
+⭐️Comprehensive dashboard with visualizations of sentiment trends, word clouds and key statistics
+
+⭐️Ability to track sentiment changes over time and identify emerging topics
+   
+Our goal is to provide valuable insights into the global conversation surrounding this major sporting event.
+    
+Developed by a team of passionate data scientists and machine learning experts, the Olympic Sentiment Analyzer combines cutting-edge technology with a user-friendly interface to make complex data analysis accessible to all.
+
+We invite you to explore the app, analyze tweets and gain insights into the pulse of the 2024 Paris Olympics. Your feedback is crucial in helping us improve and refine our tool so please don't hesitate to share your thoughts and suggestions.
+""")
 
 
 # Feedback tab
