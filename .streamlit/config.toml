@@ -1,0 +1,10 @@
+[theme]
+primaryColor = "#77DD77"  # pastel green
+backgroundColor = "#FFFFF0"  # ivory
+secondaryBackgroundColor = "#FFD700"  # gold for contrast
+textColor = "#00008B"  # Dark BLUE for visibility
+secondaryTextColor = "#4B0082"  # Indigo for secondary elements
+successColor = "#98FB98"  # Pale Green for success indicators
+warningColor = "#FFD700"  # Gold for warnings
+errorColor = "#FF6347"  # Tomato Red for errors
+font = "sans serif"  # Clean, modern font

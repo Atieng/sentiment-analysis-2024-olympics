@@ -3,55 +3,45 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 import re
+from wordcloud import WordCloud
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import requests
 from streamlit_lottie import st_lottie
 from PIL import Image
 import base64
+import emoji
+import string
 import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import sklearn
 
+# Download required NLTK data
+nltk.download('punkt')
+nltk.download('vader_lexicon')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
 
 # Set page configuration
-st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", layout="wide")
+st.set_page_config(page_title="2024 Olympics Sentiment Analyzer", page_icon="🏅", layout="wide")
 
-def add_bg_image(image_file):
-    with open(image_file, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
-    st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background-image: url(data:image/{"png" if image_file.name.endswith("png") else "jpg"};base64,{encoded_string});
-        background-size: 100%;
-        background-position: top;
-        background-repeat: no-repeat;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-    )
-
-# Call the add background image function 
-add_bg_image("Images/background.jpg")
-
+       
 # Load Lottie animations
 def load_lottieurl(url: str):
     r = requests.get(url)
     if r.status_code != 200:
         return None
     return r.json()
-
+    
 st.markdown("---")
 
 # Olympic ring colors
-ring_colors = ["blue", "yellow", "gray", "green", "red"]
+ring_colors = ["blue", "yellow", "black", "green", "red", "purple"]
 
 # Create tabs
-tabs = st.tabs(["🏠 Home", "📊 Analyzer", "👥 The Team", "ℹ️ Info", "💬 Feedback"])
+tabs = st.tabs(["🏠 Home", "📊 Analyzer", "📈 Dashboard", "👥 The Team", "ℹ️ Info", "💬 Feedback"])
 
 # Apply Olympic ring colors to tabs and style them as rings
 st.markdown(f"""
@@ -93,6 +83,10 @@ st.markdown(f"""
     border-color: {ring_colors[4]};
 }}
 
+.stTabs [data-baseweb="tab"]:nth-child(6) {{
+    border-color: {ring_colors[5]};
+}}
+
 .stTabs [data-baseweb="tab"]:hover {{
     transform: scale(1.1);
 }}
@@ -107,7 +101,7 @@ with tabs[0]:
     lottie_url = "https://lottie.host/fe78a580-e21b-4613-b5d6-cc64b1a934b7/vDApSHkH81.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
-    st.write("Analyze sentiments based off the 2024 Paris Olympics with our advanced tool.")
+    st.write("Analyze sentiments of the 2024 Paris Olympics with our advanced tool.")
 
  
 # Sentiment analyzer tab
@@ -122,10 +116,6 @@ with tabs[1]:
     with open('Models/vader_model.pkl', 'rb') as vader_file:
         loaded_vader = pickle.load(vader_file)
         
-    # Load the pickled vectorizer
-    with open('Models/tfidf_vectorizer.pkl', 'rb') as vec_file:
-        loaded_vectorizer = pickle.load(vec_file)
-    
     def clean_tweet(tweet):
         # Remove URLs
         tweet = re.sub(r'http\S+|www\S+|https\S+', '', tweet, flags=re.MULTILINE)
@@ -144,10 +134,7 @@ with tabs[1]:
 
     # Function to analyze sentiment using VADER
     def analyze_sentiment_vader(text):
-        
-        # Preprocess the text using the loaded vectorizer 
-        text_transformed = loaded_vectorizer.transform([text])
-        
+    
         # Use the VADER model to predict the sentiment
         vader_scores = loaded_vader.polarity_scores(text)
         
@@ -226,9 +213,142 @@ with tabs[1]:
 
     st.markdown("---")
 
+# Dashboard tab
+with tabs[2]:
+    st.title("Olympics Twitter Sentiment Stats")
+    
+    lottie_url = "https://lottie.host/a96d76d8-f260-420f-98be-03cf4f377403/NKKum85jXp.json"  # Olympic stats animation
+    lottie_json = load_lottieurl(lottie_url)
+    st_lottie(lottie_json, height=200)
+
+    def preprocess_text(text):
+        if not isinstance(text, str):
+            return str(text)
+        # Convert to lowercase
+        text = text.lower()
+        
+        # Remove URLs
+        text = re.sub(r'http\S+|www\S+|https\S+', '', text, flags=re.MULTILINE)
+        
+        # Remove user @ references and '#' from hashtags
+        text = re.sub(r'\@\w+|\#', '', text)
+        
+        # Replace emojis with their text description
+        text = emoji.demojize(text)
+        
+        # Remove non-alphanumeric characters
+        text = re.sub(r'[^\w\s]', '', text)
+        
+        # Tokenize the text
+        tokens = word_tokenize(text)
+        
+        # Remove stopwords
+        stop_words = set(stopwords.words('english'))
+        tokens = [word for word in tokens if word not in stop_words]
+        
+        # Lemmatize the tokens
+        lemmatizer = WordNetLemmatizer()
+        tokens = [lemmatizer.lemmatize(word) for word in tokens]
+        
+        # Join the tokens back into a single string
+        cleaned_text = ' '.join(tokens)
+        
+        return cleaned_text
+    
+    def preprocess_dataframe(df):
+        
+        # Preprocess the 'Tweet_Content' column
+        df['Cleaned_Tweet'] = df['Tweet_Content'].apply(preprocess_text)
+        
+        # Convert 'Tweet_Timestamp' to datetime and extract date
+        df['Tweet_Timestamp'] = pd.to_datetime(df['Tweet_Timestamp'])
+        df['date'] = df['Tweet_Timestamp'].dt.date
+        
+        # Apply sentiment analysis
+        df['sentiment'] = df['Cleaned_Tweet'].apply(lambda x: analyze_sentiment_vader(x)[0])
+        df['sentiment_score'] = df['Cleaned_Tweet'].apply(lambda x: analyze_sentiment_vader(x)[1])
+        
+        return df
+
+    uploaded_file = st.file_uploader("Upload a CSV file of The Paris Olympics-related tweets", type=["csv"])
+    
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
+        # Preprocess the dataframe
+        df = preprocess_dataframe(df)
+    
+        # 1. Word Cloud
+        st.subheader("Word Cloud of Tweets")
+        # Convert all Tweet_Content entries to strings and handle NaNs
+        df['Tweet_Content'] = df['Tweet_Content'].astype(str).fillna('')
+        # Join the tweets into a single text
+        text = " ".join(tweet for tweet in df['Tweet_Content'])
+        wordcloud = WordCloud(width=800, height=400, background_color='white', colormap="Dark2").generate(text)
+        plt.figure(figsize=(10, 5))
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis('off')
+        st.pyplot(plt)
+        
+        # 2. Sentiment Distribution
+        st.subheader("Sentiment Distribution")
+        fig, ax = plt.subplots()
+        df['sentiment'].value_counts().plot(kind='bar', ax=ax , colormap="viridis")
+        plt.title("Sentiment Distribution")
+        plt.xlabel("Sentiment")
+        plt.ylabel("Count")
+        st.pyplot(fig)
+        
+        # 3. Sentiment Over Time
+        st.subheader("Sentiment Over Time")
+        daily_sentiment = df.groupby('date')['sentiment_score'].mean().reset_index()
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.plot(daily_sentiment['date'], daily_sentiment['sentiment_score'], color='#000080')
+        plt.title("Average Sentiment Score Over Time")
+        plt.xlabel("Date")
+        plt.ylabel("Average Sentiment Score")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+        
+        # 4. Top Hashtags
+        st.subheader("Top Hashtags")
+        hashtags = ' '.join(df['Tweet_Content'].apply(lambda x: ' '.join(re.findall(r'#\w+', x.lower())))).split()
+        hashtag_counts = pd.Series(hashtags).value_counts().head(10)
+        fig, ax = plt.subplots()
+        hashtag_counts.plot(kind='bar', ax=ax, colormap="Dark2")
+        plt.title("Top 10 Hashtags")
+        plt.xlabel("Hashtag")
+        plt.ylabel("Count")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+        
+        # 5. Tweet Volume Over Time
+        st.subheader("Tweet Volume Over Time")
+        tweet_volume = df.groupby('date').size().reset_index(name='count')
+        fig, ax = plt.subplots(figsize=(12, 6))
+        ax.plot(tweet_volume['date'], tweet_volume['count'], color='#FFD700')
+        plt.title("Tweet Volume Over Time")
+        plt.xlabel("Date")
+        plt.ylabel("Number of Tweets")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+        
+        # 6. Most Common Words
+        st.subheader("Most Common Words")
+        stop_words = set(stopwords.words('english'))
+        words = ' '.join(df['Tweet_Content']).lower().split()
+        words = [word for word in words if word not in stop_words and len(word) > 3]
+        word_freq = pd.Series(words).value_counts().head(20)
+        fig, ax = plt.subplots(figsize=(12, 6))
+        word_freq.plot(kind='bar', ax=ax, colormap="Dark2")
+        plt.title("Top 20 Most Common Words")
+        plt.xlabel("Word")
+        plt.ylabel("Frequency")
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+        
 
 # Team tab
-with tabs[2]:
+with tabs[3]:
     st.title("The Data Sentinels")
     # Load Lottie animation
     lottie_url = "https://lottie.host/18039274-4e01-4558-845e-a1d1d3b950eb/cKT9Btma01.json"  
@@ -363,43 +483,35 @@ with tabs[2]:
             """, unsafe_allow_html=True)
         
 # About tab
-with tabs[3]:
+with tabs[4]:
     st.title("About The App")
     # Load lottie animation
     lottie_url = "https://lottie.host/93047e01-af1c-425a-89f5-c4d49abc3aaa/LVMzN5PPXM.json"  
     lottie_json = load_lottieurl(lottie_url)
     st_lottie(lottie_json, height=200)
     
-    st.write("""
-    The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Paris Olympic Games. 
-    The application uses advanced natural language processing and machine learning techniques to process large volumes of 
-    text data from Twitter and user-submitted content.
-    It was created to provide real-time insights into public opinion and reactions to Olympic events, athletes and other related topics.
-    """)
-
-    st.subheader("How it works")
-    st.write("""
-    - Tweets are collected using a web-scraping tool known as Octoparse.
-    - Each tweet is analyzed for sentiment using natural language processing.
-    - Results are visualized and updated continuously.
-    """)
+    st.write(""" The Olympic Sentiment Analyzer is a powerful tool designed to analyze public sentiment surrounding the 2024 Paris Olympic Games. Our application leverages advanced natural language processing and machine learning techniques to process large volumes of text data from X and user-submitted content.
     
-    st.subheader("Technologies used")
-    st.write("""
-    - Python
-    - Streamlit
-    - Pandas for data manipulation and analysis
-    - NLTK and VaderSentiment for sentiment analysis
-    - Scikit-Learn for machine learning operations
-    - Matplotlib and Seaborn for visualizations
-    """)
+Key features:
 
-    st.write("""This project is developed by a team of data scientists and machine learning experts passionate about sports and data analysis. 
-    Our goal is to provide valuable insights into public opinion and sentiment trends throughout the 2024 Olympic Games.
-    """)
+⭐️Real-time sentiment analysis of Olympic-related tweets
+
+⭐️User-friendly interface for analyzing individual tweets or batch uploads
+
+⭐️Comprehensive dashboard with visualizations of sentiment trends, word clouds and key statistics
+
+⭐️Ability to track sentiment changes over time and identify emerging topics
+   
+Our goal is to provide valuable insights into the global conversation surrounding this major sporting event.
+    
+Developed by a team of passionate data scientists and machine learning experts, the Olympic Sentiment Analyzer combines cutting-edge technology with a user-friendly interface to make complex data analysis accessible to all.
+
+We invite you to explore the app, analyze tweets and gain insights into the pulse of the 2024 Paris Olympics. Your feedback is crucial in helping us improve and refine our tool so please don't hesitate to share your thoughts and suggestions.
+""")
+
 
 # Feedback tab
-with tabs[4]:
+with tabs[5]:
     st.title("We Value Your Feedback")
     
     st.subheader("Share Your Thoughts")
@@ -419,6 +531,8 @@ with tabs[4]:
     
     if st.button("Submit Rating"):
         st.success(f"Thank you for rating us {rating} star(s)!")
+
+
 
 # Footer 
 st.markdown("---")
