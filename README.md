@@ -62,8 +62,6 @@ The model development and evaluation process involved testing several approaches
 6.	Provide regular sentiment reports to sponsors helping them optimize their Olympic-related marketing campaigns. 
 7.	Collaborate with local Paris businesses to use sentiment data for improving visitor experiences during the Olympics.
 
-
-
 **Next steps**
 
 1.	Incorporate Olympics-specific features such as mentions of specific sports, athletes or events to improve classification accuracy. 
@@ -74,8 +72,6 @@ The model development and evaluation process involved testing several approaches
 6.	Develop algorithms to automatically identify and report on significant shifts in sentiment or emerging trends. 
 7.	Offer training sessions for various stakeholders on how to interpret and act upon the sentiment analysis results. 
 8.	Set up infrastructure for continued analysis post-Olympics to track the event's lasting impact on public sentiment towards Paris and the Olympic movement.
-![image](https://github.com/user-attachments/assets/69805506-a7da-496f-9805-3ee70e84cced)
-
 
 ### Deployment
 Check out our app by clicking on your favorite color: [![Paris](https://img.shields.io/badge/Paris-0072CE?style=plastic&logo=Olympics&logoColor=white)](https://olympicssentimentanalysis.streamlit.app/)
