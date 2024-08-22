@@ -6,12 +6,15 @@
 ## Business Understanding
 
 **Overview**
+
 The Paris Olympics 2024 promises to be one of the most significant global events of the decade, uniting nations, cultures, and athletes from around the world. As excitement builds and discussions around the event intensify, understanding public sentiment becomes crucial for stakeholders, including organizers, sponsors, media outlets, and even fans. This project aims to analyze the sentiment of conversations surrounding the Paris Olympics 2024, offering insights into public opinion, perceptions, and the overall sentiment landscape leading up to and during the event.
 
-## Goal
+**Goal**
+
 This project aims to capture and decode the global sentiment surrounding the Paris Olympics 2024. By analyzing emotions and opinions from diverse sources, we seek to provide real-time insights that empower organizers, brands, and media to align with public sentiment, ensuring the Paris Olympics 2024 resonates positively worldwide.
 
-## Objectives
+**Objectives**
+
 1. Develop a comprehensive social media sentiment analysis model that accurately captures and interprets public sentiment about the Paris Olympics from social media data.
 2. To extract, preprocess and clean social media data from multiple platforms addressing quality issues and handling multilingual content related to the Paris Olympics. 
 3. To develop and train advanced natural language processing models to accurately classify sentiments incorporating techniques to handle sarcasm and contextual nuances. 
@@ -33,26 +36,23 @@ them can affect their performance and well-being.
 city and sentiment analysis can help gauge public opinion on local issues related to the
 event.
 
- ## CRISP-DM Methodology
-
-**Data understanding**
+## Data Understanding
 
 The data was extracted from X using Octorparse Webscraping Tool. The focus was on tweets in the form of hashtags, comments and retweets discussing the various aspects of the Paris Olympics.
  
-**Data preparation/ data cleaning**
+## Data Preparation
 
-The data processing step involved analyzing and cleaning a merged dataset of tweets related to the 2024 Paris Olympics, originally composed of multiple CSV files. A DataUnderstanding class was created to examine the dataset, revealing missing values and discrepancies, as well as a large number of apparent duplicates, most of which were false positives due to partial similarities.
+The data processing step involved analyzing and cleaning a merged dataset of tweets related to the 2024 Paris Olympics originally composed of multiple CSV files. A DataUnderstanding class was created to examine the dataset revealing missing values and discrepancies as well as a large number of apparent duplicates most of which were false positives due to partial similarities.
 
-
-  **Modeling**
+ ## Modeling
   
-The model development and evaluation process involved testing several approaches. We started with traditional machine learning models, including Logistic Regression, Support Vector Machine, Random Forest, and Naive Bayes. Among these, the Random Forest model emerged as the best performer, initially achieving 97.4% accuracy, which slightly decreased to 96.6% after tuning. We also implemented an XGBoost model using RandomizedSearchCV for hyperparameter tuning, which achieved 82.2% accuracy. The VADER model demonstrated excellent performance with 94.92% accuracy and impressive overall metrics: 95.20% Precision, 94.92% Recall, and 95.01% F1-Score. In contrast, the DistilBERT model showed lower performance with 44.34% accuracy and overall metrics of 45.94% Precision, 44.34% Recall, and 44.62% F1-Score.
+The model development and evaluation process involved testing several approaches. We started with traditional machine learning models, including Logistic Regression, Support Vector Machine, Random Forest, and Naive Bayes. Among these, the Random Forest model emerged as the best performer initially achieving 97.4% accuracy which slightly decreased to 96.6% after tuning. We also implemented an XGBoost model using RandomizedSearchCV for hyperparameter tuning, which achieved 82.2% accuracy. The VADER model demonstrated excellent performance with 94.92% accuracy and impressive overall metrics: 95.20% Precision, 94.92% Recall and 95.01% F1-Score. In contrast, the DistilBERT model showed lower performance with 44.34% accuracy and overall metrics of 45.94% Precision, 44.34% Recall and 44.62% F1-Score.
 
-**Conclusion**
+## Conclusion
 
 > The VADER (Valence Aware Dictionary and sEntiment Reasoner) model significantly outperformed all other models including the tuned Random Forest. The success of VADER, a rule-based model designed specifically for social media text, highlights the importance of domain-specific tools in sentiment analysis especially when dealing with the nuanced language of Olympic-related discussions on social media platforms. 
 
-**Recommendations**
+## Recommendations
 
 1.	Implement a real-time sentiment tracking dashboard for organizers and media partners, allowing them to respond quickly to shifts in public opinion. 
 2.	Develop a multi-lingual sentiment analysis capability to cater to the international nature of the Olympics using language-specific versions of VADER where available. 
@@ -62,7 +62,7 @@ The model development and evaluation process involved testing several approaches
 6.	Provide regular sentiment reports to sponsors helping them optimize their Olympic-related marketing campaigns. 
 7.	Collaborate with local Paris businesses to use sentiment data for improving visitor experiences during the Olympics.
 
-**Next steps**
+## Next steps
 
 1.	Incorporate Olympics-specific features such as mentions of specific sports, athletes or events to improve classification accuracy. 
 2.	Create a specialized lexicon for VADER that includes Olympic-specific terms and their sentiment associations. 
