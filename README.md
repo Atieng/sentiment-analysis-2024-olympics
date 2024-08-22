@@ -3,7 +3,9 @@
 
 ![attachment:logo.png](Images/logo.png)
 
-## Overview
+## Business Understanding
+
+**Overview**
 The Paris Olympics 2024 promises to be one of the most significant global events of the decade, uniting nations, cultures, and athletes from around the world. As excitement builds and discussions around the event intensify, understanding public sentiment becomes crucial for stakeholders, including organizers, sponsors, media outlets, and even fans. This project aims to analyze the sentiment of conversations surrounding the Paris Olympics 2024, offering insights into public opinion, perceptions, and the overall sentiment landscape leading up to and during the event.
 
 ## Goal
@@ -44,19 +46,32 @@ The data processing step involved analyzing and cleaning a merged dataset of twe
 
   **Modeling**
   
-The modeling process involved evaluating several machine learning models including Logistic Regression, Support Vector Machine, Random Forest and Naive Bayes using a TF-IDF vectorization approach. The models were trained on a balanced dataset created using SMOTE to address class imbalance. After initial evaluation the Random Forest model emerged as the best performer among these traditional ML models. Hyperparameter tuning was then performed on the Random Forest model to optimize its performance. Pre-trained models like VADER and DistilBERT were tested for comparison. The VADER model outperformed all others achieving an impressive accuracy of 0.946.
+The model development and evaluation process involved testing several approaches. We started with traditional machine learning models, including Logistic Regression, Support Vector Machine, Random Forest, and Naive Bayes. Among these, the Random Forest model emerged as the best performer, initially achieving 97.4% accuracy, which slightly decreased to 96.6% after tuning. We also implemented an XGBoost model using RandomizedSearchCV for hyperparameter tuning, which achieved 82.2% accuracy. The VADER model demonstrated excellent performance with 94.92% accuracy and impressive overall metrics: 95.20% Precision, 94.92% Recall, and 95.01% F1-Score. In contrast, the DistilBERT model showed lower performance with 44.34% accuracy and overall metrics of 45.94% Precision, 44.34% Recall, and 44.62% F1-Score.
 
 **Conclusion**
 
-The VADER (Valence Aware Dictionary and sEntiment Reasoner) model significantly outperformed all other models including the tuned Random Forest achieving an accuracy of 94.60%, precision of 94.74%, recall of 94.60% and an F1-score of 94.65%. These metrics exceeded the predefined success criteria across all sentiment categories (positive, negative and neutral). The success of VADER, a rule-based model designed specifically for social media text, highlights the importance of domain-specific tools in sentiment analysis especially when dealing with the nuanced language of Olympic-related discussions on social media platforms. 
+> The VADER (Valence Aware Dictionary and sEntiment Reasoner) model significantly outperformed all other models including the tuned Random Forest. The success of VADER, a rule-based model designed specifically for social media text, highlights the importance of domain-specific tools in sentiment analysis especially when dealing with the nuanced language of Olympic-related discussions on social media platforms. 
 
 **Recommendations**
 
-Based on the outstanding performance of the VADER model, it is recommended to implement a comprehensive sentiment analysis strategy for the 2024 Paris Olympics. This should include developing a real-time sentiment tracking dashboard for organizers and media partners to enable quick responses to public opinion shifts. Expanding the analysis to multiple languages will cater to the international nature of the Olympics. Implementing a sentiment-based alert system for potentially controversial topics will allow for rapid communication team responses. Integrating sentiment analysis results with other data sources like ticket sales and TV ratings will provide a holistic view of public engagement. Using sentiment trends to guide content creation and social media strategies will help focus on themes and athletes generating positive engagement. Regular sentiment reports should be provided to sponsors to optimize their Olympic-related marketing campaigns. Lastly, collaborating with local Paris businesses to use sentiment data can help improve visitor experiences during the Olympics.
+1.	Implement a real-time sentiment tracking dashboard for organizers and media partners, allowing them to respond quickly to shifts in public opinion. 
+2.	Develop a multi-lingual sentiment analysis capability to cater to the international nature of the Olympics using language-specific versions of VADER where available. 
+3.	Create a sentiment-based alert system for potentially controversial or viral topics enabling rapid response from the communications team. 
+4.	Integrate sentiment analysis results with other data sources (e.g. ticket sales, TV ratings) to provide a comprehensive view of public engagement. 
+5.	Use sentiment trends to guide content creation and social media strategies focusing on themes and athletes that generate positive engagement. 
+6.	Provide regular sentiment reports to sponsors helping them optimize their Olympic-related marketing campaigns. 
+7.	Collaborate with local Paris businesses to use sentiment data for improving visitor experiences during the Olympics.
 
 **Next steps**
 
-To further enhance the sentiment analysis capabilities for the 2024 Paris Olympics, several key steps should be taken. First, improve feature engineering by incorporating Olympics-specific features such as mentions of particular sports, athletes or events. Develop a custom Olympic VADER lexicon to include specialized terms and their sentiment associations. Extend the analysis to multiple social media platforms and news sources for a more comprehensive view. Create interactive, user-friendly dashboards for stakeholders to explore real-time sentiment data. Establish a benchmarking system to compare sentiment trends with previous Olympic events. Develop algorithms to automatically identify and report significant shifts in sentiment or emerging trends. Conduct training sessions for various stakeholders on interpreting and acting upon the sentiment analysis results. Set up infrastructure for continued analysis post-Olympics to track the event's lasting impact on public sentiment towards Paris and the Olympic movement. Finally, preprocess the multilingual Olympics data and fine-tune a model to accurately detect sentiment across different languages ensuring a truly global analysis of public opinion.
+1.	Incorporate Olympics-specific features such as mentions of specific sports, athletes or events to improve classification accuracy. 
+2.	Create a specialized lexicon for VADER that includes Olympic-specific terms and their sentiment associations. 
+3.	Extend the sentiment analysis to multiple social media platforms and news sources for a more comprehensive view. 
+4.	Develop user-friendly and interactive dashboards for stakeholders to explore sentiment data in real-time. 
+5.	Set up a system to compare sentiment trends with previous Olympic events to identify unique characteristics of the Paris Olympics. 
+6.	Develop algorithms to automatically identify and report on significant shifts in sentiment or emerging trends. 
+7.	Offer training sessions for various stakeholders on how to interpret and act upon the sentiment analysis results. 
+8.	Set up infrastructure for continued analysis post-Olympics to track the event's lasting impact on public sentiment towards Paris and the Olympic movement.
 
 ### Deployment
 Check out our app by clicking on your favorite color: [![Paris](https://img.shields.io/badge/Paris-0072CE?style=plastic&logo=Olympics&logoColor=white)](https://olympicssentimentanalysis.streamlit.app/)
@@ -160,7 +175,6 @@ Sentiment Analysis-Paris Olympics 2024/
     ├── Sentiment Analysis Presentation.pdf
     ├── requirements.txt
     ├── sentiment_analysis_paris_olympics.docx
-    ├── sentiment_analysis_word_doc.pdf
     └── vader.py
       
 ```
