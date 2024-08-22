@@ -3,7 +3,7 @@
 
 ![attachment:logo.png](Images/logo.png)
 
-# Table of Contents
+## Table of Contents
 
 1. [Business Understanding](#business-understanding)
    - [Overview](#overview)
