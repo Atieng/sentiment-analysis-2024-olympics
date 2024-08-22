@@ -146,22 +146,19 @@ Sentiment Analysis-Paris Olympics 2024/
 │
 └── Project Files/
     ├── .ipynb_checkpoints
+    ├── .streamlit
     ├── Csv Files
     ├── Images
     ├── Models
     ├── Notebooks
-    ├── X_data
     ├── the_team
     ├── .DS_Store
     ├── .gitattributes
     ├── .gitignore
     ├── LICENSE
-    ├── Presentation_Capstone.pptx
     ├── README.md
-    ├── logo.png
-    ├── presentation.pdf
+    ├── Sentiment Analysis Presentation.pdf
     ├── requirements.txt
-    ├── sentiment.ipynb
     ├── sentiment_analysis_paris_olympics.docx
     ├── sentiment_analysis_word_doc.pdf
     └── vader.py
