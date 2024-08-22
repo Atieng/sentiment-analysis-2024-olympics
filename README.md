@@ -3,6 +3,39 @@
 
 ![attachment:logo.png](Images/logo.png)
 
+# Table of Contents
+
+1. [Business Understanding](#business-understanding)
+   - [Overview](#overview)
+   - [Goal](#goal)
+   - [Objectives](#objectives)
+   - [Stakeholders](#stakeholders)
+
+2. [Data Understanding](#data-understanding)
+
+3. [Data Preparation](#data-preparation)
+
+4. [Modeling](#modeling)
+
+5. [Conclusion](#conclusion)
+
+6. [Recommendations](#recommendations)
+
+7. [Next Steps](#next-steps)
+
+8. [Deployment](#deployment)
+   - [Installation](#installation)
+
+9. [Libraries and Tools Used](#libraries-and-tools-used)
+
+10. [License](#license)
+
+11. [Contributing Members](#contributing-members)
+
+12. [Contacts](#contacts)
+
+13. [Repository Structure](#repository-structure)
+
 ## Business Understanding
 
 **Overview**
