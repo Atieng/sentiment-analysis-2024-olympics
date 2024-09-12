@@ -76,7 +76,11 @@ The data was extracted from X using Octorparse Webscraping Tool. The focus was o
 ## Data Preparation
 
 The data processing step involved analyzing and cleaning a merged dataset of tweets related to the 2024 Paris Olympics originally composed of multiple CSV files. A DataUnderstanding class was created to examine the dataset revealing missing values and discrepancies as well as a large number of apparent duplicates most of which were false positives due to partial similarities.
-
+## Visualizations
+ 
+ 
+[![Visualization DashBoard](https://img.shields.io/badge/Olympics-F4C300?style=plastic)]( 
+https://public.tableau.com/app/profile/ivy.atieng/viz/2024PARISOLYMPICSVISUALIZATIONS/Dashboard2)
  ## Modeling
   
 The model development and evaluation process involved testing several approaches. We started with traditional machine learning models, including Logistic Regression, Support Vector Machine, Random Forest, and Naive Bayes. Among these, the Random Forest model emerged as the best performer initially achieving 97.4% accuracy which slightly decreased to 96.6% after tuning. We also implemented an XGBoost model using RandomizedSearchCV for hyperparameter tuning, which achieved 82.2% accuracy. The VADER model demonstrated excellent performance with 94.92% accuracy and impressive overall metrics: 95.20% Precision, 94.92% Recall and 95.01% F1-Score. In contrast, the DistilBERT model showed lower performance with 44.34% accuracy and overall metrics of 45.94% Precision, 44.34% Recall and 44.62% F1-Score.
